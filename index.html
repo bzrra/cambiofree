@@ -1,0 +1,1593 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor Cambial - Média Histórica</title>
+    <meta name="description" content="Calcule a média histórica de conversão entre moedas em qualquer período desde 1999. Visualize gráficos e tendências.">
+    
+    <!-- ⚠️ ADICIONE SEU CÓDIGO ADSENSE AQUI APÓS APROVAÇÃO -->
+    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXX" crossorigin="anonymous"></script> -->
+    
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Playfair+Display:wght@600;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0A2F35;
+            --secondary: #D4AF37;
+            --accent: #00FFA3;
+            --surface: #0D1B2A;
+            --surface-light: #1B263B;
+            --text: #E0E1DD;
+            --text-muted: #778DA9;
+        }
+
+        body {
+            font-family: 'Space Mono', monospace;
+            background: linear-gradient(135deg, var(--surface) 0%, var(--primary) 100%);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(0, 255, 163, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ==== NAVEGAÇÃO PROFISSIONAL ==== */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(13, 27, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text);
+            font-size: 1.3rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .nav-logo:hover {
+            color: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .logo-icon {
+            font-size: 1.8rem;
+            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.4));
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            list-style: none;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            text-decoration: none;
+            color: var(--text);
+            font-size: 0.95rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .nav-link:hover {
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(0, 255, 163, 0.1));
+            color: var(--secondary);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+        }
+
+        .nav-icon {
+            font-size: 1.1rem;
+        }
+
+        .nav-cta {
+            background: linear-gradient(135deg, var(--secondary), var(--accent));
+            color: var(--surface);
+            font-weight: 700;
+            padding: 10px 24px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4);
+        }
+
+        .mobile-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .mobile-toggle span {
+            width: 25px;
+            height: 3px;
+            background: var(--secondary);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(7px, 7px);
+        }
+
+        .mobile-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle {
+                display: flex;
+            }
+
+            .nav-menu {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                right: 0;
+                flex-direction: column;
+                background: rgba(13, 27, 42, 0.98);
+                backdrop-filter: blur(10px);
+                padding: 20px;
+                gap: 0;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.4s ease;
+                border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            }
+
+            .nav-menu.active {
+                max-height: 400px;
+            }
+
+            .nav-link {
+                width: 100%;
+                padding: 15px 20px;
+                justify-content: flex-start;
+            }
+
+            .nav-cta {
+                width: 100%;
+                margin-top: 10px;
+            }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+        }
+
+        /* Estilos para Espaços de Anúncios */
+        .ad-container {
+            margin: 30px auto;
+            padding: 20px;
+            background: rgba(27, 38, 59, 0.3);
+            border: 1px dashed rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            text-align: center;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ad-placeholder {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            padding: 10px;
+        }
+
+        .ad-top {
+            animation: fadeInDown 0.8s ease-out 0.1s both;
+            max-width: 728px;
+        }
+
+        .ad-middle {
+            animation: fadeIn 0.8s ease-out 0.3s both;
+        }
+
+        .ad-bottom {
+            animation: fadeInUp 0.8s ease-out 0.5s both;
+            max-width: 728px;
+        }
+
+        .seo-content {
+            background: rgba(27, 38, 59, 0.4);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 16px;
+            padding: 40px;
+            margin: 60px 0;
+            animation: fadeInUp 0.8s ease-out 0.6s both;
+        }
+
+        .seo-content h2 {
+            font-family: 'Playfair Display', serif;
+            color: var(--secondary);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .seo-content h3 {
+            color: var(--accent);
+            font-size: 1rem;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+
+        .seo-content p {
+            line-height: 1.8;
+            margin-bottom: 15px;
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+
+        .seo-content ul {
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+
+        .seo-content li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            .seo-content {
+                padding: 30px 25px;
+            }
+
+            .seo-content h2 {
+                font-size: 1.3rem;
+            }
+
+            .seo-content h3 {
+                font-size: 0.95rem;
+            }
+        }
+
+        .main-content-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .main-content {
+            min-width: 0;
+        }
+
+        .ad-sidebar {
+            position: sticky;
+            top: 20px;
+            background: rgba(27, 38, 59, 0.4);
+            border: 1px dashed rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .converter-card {
+            background: rgba(27, 38, 59, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 24px;
+            padding: 50px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .converter-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--secondary), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        .date-range-selector {
+            background: rgba(10, 47, 53, 0.5);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .date-range-title {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            text-align: center;
+        }
+
+        .date-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .date-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .date-input-group label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .date-input-group input {
+            background: rgba(10, 47, 53, 0.8);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            color: var(--text);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .date-input-group input:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+
+        .currency-selectors {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .currency-select-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .currency-select-group label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .currency-select-group select {
+            background: rgba(10, 47, 53, 0.8);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            color: var(--text);
+            font-family: 'Space Mono', monospace;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .currency-select-group select:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+
+        .swap-button {
+            background: linear-gradient(135deg, var(--secondary), var(--accent));
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            color: var(--surface);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .swap-button:hover {
+            transform: rotate(180deg);
+        }
+
+        .calculate-button {
+            width: 100%;
+            background: linear-gradient(135deg, var(--secondary), var(--accent));
+            border: none;
+            padding: 18px;
+            border-radius: 12px;
+            color: var(--surface);
+            font-family: 'Space Mono', monospace;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .calculate-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
+        }
+
+        .calculate-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .download-buttons-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+
+        .download-button-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .format-selector {
+            background: rgba(10, 47, 53, 0.6);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: var(--text);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .format-selector:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.1);
+        }
+
+        .format-selector:hover {
+            border-color: var(--secondary);
+        }
+
+        .download-excel-button {
+            background: linear-gradient(135deg, #1e7b34, #28a745);
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            color: white;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .download-excel-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(40, 167, 69, 0.4);
+            background: linear-gradient(135deg, #28a745, #34ce57);
+        }
+
+        .download-excel-button:active {
+            transform: translateY(0);
+        }
+
+        .download-chart-button {
+            background: linear-gradient(135deg, #1e5a8e, #2196f3);
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            color: white;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .download-chart-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(33, 150, 243, 0.4);
+            background: linear-gradient(135deg, #2196f3, #42a5f5);
+        }
+
+        .download-chart-button:active {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .download-buttons-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(212, 175, 55, 0.2);
+            border-top-color: var(--secondary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 15px;
+        }
+
+        .results-container {
+            margin-top: 40px;
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: rgba(10, 47, 53, 0.5);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--secondary);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-subtext {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+
+        .chart-container {
+            background: #FFFFFF;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .chart-title {
+            font-size: 1.2rem;
+            color: var(--surface);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .error-message {
+            background: rgba(220, 38, 38, 0.1);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            color: #fca5a5;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .main-content-wrapper {
+                grid-template-columns: 1fr;
+            }
+            
+            .ad-sidebar {
+                display: none;
+            }
+
+            .date-inputs {
+                grid-template-columns: 1fr;
+            }
+
+            .currency-selectors {
+                grid-template-columns: 1fr;
+            }
+
+            .swap-button {
+                transform: rotate(90deg);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .converter-card {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ==== FOOTER ==== */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 80px;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: var(--secondary);
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVEGAÇÃO PROFISSIONAL -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <!-- Logo -->
+            <a href="media-historica-cambio.html" class="nav-logo">
+                <span class="logo-icon">💱</span>
+                <span>Câmbio Free</span>
+            </a>
+
+            <!-- Menu Principal -->
+            <ul class="nav-menu" id="navMenu">
+                <li class="nav-item">
+                    <a class="nav-link">
+                        <span class="nav-icon">🔄</span>
+                        <span>Conversor de Moedas (Em Breve)</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="media-historica-cambio.html" class="nav-link active">
+                        <span class="nav-icon">📊</span>
+                        <span>Média Histórica</span>
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Toggle Mobile -->
+            <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        const currencies = {
+            'AUD': { name: 'Dólar Australiano', flag: '🇦🇺' },
+            'BGN': { name: 'Lev Búlgaro', flag: '🇧🇬' },
+            'BRL': { name: 'Real Brasileiro', flag: '🇧🇷' },
+            'CAD': { name: 'Dólar Canadense', flag: '🇨🇦' },
+            'CHF': { name: 'Franco Suíço', flag: '🇨🇭' },
+            'CNY': { name: 'Yuan Chinês', flag: '🇨🇳' },
+            'CZK': { name: 'Coroa Tcheca', flag: '🇨🇿' },
+            'DKK': { name: 'Coroa Dinamarquesa', flag: '🇩🇰' },
+            'EUR': { name: 'Euro', flag: '🇪🇺' },
+            'GBP': { name: 'Libra Esterlina', flag: '🇬🇧' },
+            'HKD': { name: 'Dólar de Hong Kong', flag: '🇭🇰' },
+            'HUF': { name: 'Forint Húngaro', flag: '🇭🇺' },
+            'IDR': { name: 'Rupia Indonésia', flag: '🇮🇩' },
+            'ILS': { name: 'Shekel Israelense', flag: '🇮🇱' },
+            'INR': { name: 'Rúpia Indiana', flag: '🇮🇳' },
+            'ISK': { name: 'Coroa Islandesa', flag: '🇮🇸' },
+            'JPY': { name: 'Iene Japonês', flag: '🇯🇵' },
+            'KRW': { name: 'Won Sul-Coreano', flag: '🇰🇷' },
+            'MXN': { name: 'Peso Mexicano', flag: '🇲🇽' },
+            'MYR': { name: 'Ringgit Malaio', flag: '🇲🇾' },
+            'NOK': { name: 'Coroa Norueguesa', flag: '🇳🇴' },
+            'NZD': { name: 'Dólar Neozelandês', flag: '🇳🇿' },
+            'PHP': { name: 'Peso Filipino', flag: '🇵🇭' },
+            'PLN': { name: 'Zloty Polonês', flag: '🇵🇱' },
+            'RON': { name: 'Leu Romeno', flag: '🇷🇴' },
+            'SEK': { name: 'Coroa Sueca', flag: '🇸🇪' },
+            'SGD': { name: 'Dólar de Singapura', flag: '🇸🇬' },
+            'THB': { name: 'Baht Tailandês', flag: '🇹🇭' },
+            'TRY': { name: 'Lira Turca', flag: '🇹🇷' },
+            'USD': { name: 'Dólar Americano', flag: '🇺🇸' },
+            'ZAR': { name: 'Rand Sul-Africano', flag: '🇿🇦' }
+        };
+
+        function HistoricalConverter() {
+            const [fromCurrency, setFromCurrency] = useState('USD');
+            const [toCurrency, setToCurrency] = useState('BRL');
+            const [startDate, setStartDate] = useState('');
+            const [endDate, setEndDate] = useState('');
+            const [loading, setLoading] = useState(false);
+            const [results, setResults] = useState(null);
+            const [error, setError] = useState(null);
+            const [dataFormat, setDataFormat] = useState('xlsx');
+            const [imageFormat, setImageFormat] = useState('png');
+            const chartRef = useRef(null);
+            const chartInstance = useRef(null);
+
+            useEffect(() => {
+                // Set default dates (last 30 days)
+                const today = new Date();
+                const thirtyDaysAgo = new Date(today);
+                thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+                
+                setEndDate(today.toISOString().split('T')[0]);
+                setStartDate(thirtyDaysAgo.toISOString().split('T')[0]);
+            }, []);
+
+            const swapCurrencies = () => {
+                setFromCurrency(toCurrency);
+                setToCurrency(fromCurrency);
+            };
+
+            const getTodayDate = () => {
+                return new Date().toISOString().split('T')[0];
+            };
+
+            const formatDate = (dateString) => {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('pt-BR');
+            };
+
+            const calculateAverage = async () => {
+                if (!startDate || !endDate) {
+                    setError('Por favor, selecione as datas de início e fim');
+                    return;
+                }
+
+                const start = new Date(startDate);
+                const end = new Date(endDate);
+
+                if (start > end) {
+                    setError('A data de início deve ser anterior à data de fim');
+                    return;
+                }
+
+                const daysDiff = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+                if (daysDiff > 365) {
+                    setError('O período máximo é de 365 dias');
+                    return;
+                }
+
+                setLoading(true);
+                setError(null);
+                setResults(null);
+
+                try {
+                    // Using Frankfurter API for historical data (supports EUR base and others)
+                    // Need to convert if not EUR-based
+                    const response = await fetch(
+                        `https://api.frankfurter.app/${startDate}..${endDate}?from=${fromCurrency}&to=${toCurrency}`
+                    );
+
+                    if (!response.ok) {
+                        throw new Error('Erro ao buscar dados históricos');
+                    }
+
+                    const data = await response.json();
+                    
+                    if (!data.rates || Object.keys(data.rates).length === 0) {
+                        throw new Error('Não foi possível obter dados para este período');
+                    }
+
+                    const rates = [];
+                    const dataPoints = [];
+
+                    // Process the rates
+                    Object.entries(data.rates).forEach(([date, rateObj]) => {
+                        if (rateObj[toCurrency]) {
+                            const rate = rateObj[toCurrency];
+                            rates.push(rate);
+                            dataPoints.push({ date, rate });
+                        }
+                    });
+
+                    if (rates.length === 0) {
+                        throw new Error('Não foi possível obter dados para este período');
+                    }
+
+                    // Sort by date
+                    dataPoints.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+                    // Calculate statistics
+                    const average = rates.reduce((sum, rate) => sum + rate, 0) / rates.length;
+                    const min = Math.min(...rates);
+                    const max = Math.max(...rates);
+                    const variance = rates.reduce((sum, rate) => sum + Math.pow(rate - average, 2), 0) / rates.length;
+                    const standardDeviation = Math.sqrt(variance);
+
+                    setResults({
+                        average,
+                        min,
+                        max,
+                        standardDeviation,
+                        dataPoints,
+                        totalDays: rates.length
+                    });
+
+                    // Create chart
+                    setTimeout(() => createChart(dataPoints), 100);
+
+                } catch (err) {
+                    console.error('Error:', err);
+                    setError(err.message || 'Erro ao calcular média. Tente novamente.');
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            const createChart = (dataPoints) => {
+                if (!chartRef.current) return;
+
+                // Destroy previous chart if exists
+                if (chartInstance.current) {
+                    chartInstance.current.destroy();
+                }
+
+                const ctx = chartRef.current.getContext('2d');
+
+                chartInstance.current = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: dataPoints.map(p => formatDate(p.date)),
+                        datasets: [{
+                            label: `${fromCurrency} → ${toCurrency}`,
+                            data: dataPoints.map(p => p.rate),
+                            borderColor: '#D4AF37',
+                            backgroundColor: 'rgba(212, 175, 55, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 4,
+                            pointHoverRadius: 7,
+                            pointBackgroundColor: '#D4AF37',
+                            pointBorderColor: '#FFFFFF',
+                            pointBorderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                labels: {
+                                    color: '#0A2F35',
+                                    font: {
+                                        family: "'Space Mono', monospace",
+                                        size: 14,
+                                        weight: 'bold'
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(10, 47, 53, 0.95)',
+                                titleColor: '#FFFFFF',
+                                bodyColor: '#FFFFFF',
+                                borderColor: '#D4AF37',
+                                borderWidth: 2,
+                                titleFont: {
+                                    family: "'Space Mono', monospace",
+                                    size: 14
+                                },
+                                bodyFont: {
+                                    family: "'Space Mono', monospace",
+                                    size: 13
+                                },
+                                callbacks: {
+                                    label: function(context) {
+                                        return `Taxa: ${context.parsed.y.toFixed(4)}`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                ticks: {
+                                    color: '#0A2F35',
+                                    maxRotation: 45,
+                                    minRotation: 45,
+                                    font: {
+                                        family: "'Space Mono', monospace",
+                                        size: 11
+                                    }
+                                },
+                                grid: {
+                                    color: 'rgba(10, 47, 53, 0.1)',
+                                    drawBorder: true,
+                                    borderColor: '#0A2F35'
+                                }
+                            },
+                            y: {
+                                ticks: {
+                                    color: '#0A2F35',
+                                    font: {
+                                        family: "'Space Mono', monospace",
+                                        size: 11
+                                    },
+                                    callback: function(value) {
+                                        return value.toFixed(4);
+                                    }
+                                },
+                                grid: {
+                                    color: 'rgba(10, 47, 53, 0.1)',
+                                    drawBorder: true,
+                                    borderColor: '#0A2F35'
+                                }
+                            }
+                        }
+                    }
+                });
+            };
+
+            const exportToExcel = () => {
+                if (!results || !results.dataPoints || results.dataPoints.length === 0) {
+                    alert('Não há dados para exportar. Por favor, calcule a média histórica primeiro.');
+                    return;
+                }
+
+                // Preparar os dados básicos
+                const basicData = results.dataPoints.map(point => ({
+                    'Data': point.date,
+                    [`Taxa (${fromCurrency}/${toCurrency})`]: parseFloat(point.rate.toFixed(4)),
+                }));
+
+                // Dados de resumo
+                const summaryData = [
+                    { 'Data': '', [`Taxa (${fromCurrency}/${toCurrency})`]: '' },
+                    { 'Data': 'RESUMO ESTATÍSTICO', [`Taxa (${fromCurrency}/${toCurrency})`]: '' },
+                    { 'Data': 'Média', [`Taxa (${fromCurrency}/${toCurrency})`]: parseFloat(results.average.toFixed(4)) },
+                    { 'Data': 'Mínima', [`Taxa (${fromCurrency}/${toCurrency})`]: parseFloat(results.min.toFixed(4)) },
+                    { 'Data': 'Máxima', [`Taxa (${fromCurrency}/${toCurrency})`]: parseFloat(results.max.toFixed(4)) },
+                    { 'Data': 'Desvio Padrão', [`Taxa (${fromCurrency}/${toCurrency})`]: parseFloat(results.standardDeviation.toFixed(4)) },
+                    { 'Data': 'Variação (%)', [`Taxa (${fromCurrency}/${toCurrency})`]: parseFloat(((results.max - results.min) / results.min * 100).toFixed(2)) },
+                    { 'Data': 'Total de Dias Úteis', [`Taxa (${fromCurrency}/${toCurrency})`]: results.totalDays }
+                ];
+
+                const excelData = [...basicData, ...summaryData];
+
+                let fileName = `Cambio_${fromCurrency}_${toCurrency}_${startDate}_${endDate}`;
+
+                if (dataFormat === 'xlsx') {
+                    // Excel format
+                    const ws = XLSX.utils.json_to_sheet(excelData);
+                    const wb = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(wb, ws, 'Taxas de Câmbio');
+                    ws['!cols'] = [{ wch: 15 }, { wch: 20 }];
+                    XLSX.writeFile(wb, fileName + '.xlsx');
+                } else if (dataFormat === 'csv') {
+                    // CSV format
+                    const ws = XLSX.utils.json_to_sheet(excelData);
+                    const csv = XLSX.utils.sheet_to_csv(ws);
+                    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = fileName + '.csv';
+                    link.click();
+                } else if (dataFormat === 'json') {
+                    // JSON format
+                    const jsonData = {
+                        metadata: {
+                            from: fromCurrency,
+                            to: toCurrency,
+                            startDate: startDate,
+                            endDate: endDate,
+                            totalDays: results.totalDays
+                        },
+                        statistics: {
+                            average: parseFloat(results.average.toFixed(4)),
+                            min: parseFloat(results.min.toFixed(4)),
+                            max: parseFloat(results.max.toFixed(4)),
+                            standardDeviation: parseFloat(results.standardDeviation.toFixed(4)),
+                            variation: parseFloat(((results.max - results.min) / results.min * 100).toFixed(2))
+                        },
+                        data: results.dataPoints.map(point => ({
+                            date: point.date,
+                            rate: parseFloat(point.rate.toFixed(4))
+                        }))
+                    };
+                    const blob = new Blob([JSON.stringify(jsonData, null, 2)], { type: 'application/json' });
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = fileName + '.json';
+                    link.click();
+                } else if (dataFormat === 'txt') {
+                    // TXT format (tab-delimited)
+                    let txtContent = `TAXAS DE CÂMBIO - ${fromCurrency} para ${toCurrency}\n`;
+                    txtContent += `Período: ${startDate} até ${endDate}\n`;
+                    txtContent += `Total de dias úteis: ${results.totalDays}\n\n`;
+                    txtContent += `Data\t\tTaxa\n`;
+                    txtContent += `${'='.repeat(40)}\n`;
+                    results.dataPoints.forEach(point => {
+                        txtContent += `${point.date}\t\t${point.rate.toFixed(4)}\n`;
+                    });
+                    txtContent += `\n${'='.repeat(40)}\n`;
+                    txtContent += `RESUMO ESTATÍSTICO\n`;
+                    txtContent += `${'='.repeat(40)}\n`;
+                    txtContent += `Média:\t\t\t${results.average.toFixed(4)}\n`;
+                    txtContent += `Mínima:\t\t\t${results.min.toFixed(4)}\n`;
+                    txtContent += `Máxima:\t\t\t${results.max.toFixed(4)}\n`;
+                    txtContent += `Desvio Padrão:\t\t${results.standardDeviation.toFixed(4)}\n`;
+                    txtContent += `Variação (%):\t\t${((results.max - results.min) / results.min * 100).toFixed(2)}%\n`;
+                    
+                    const blob = new Blob([txtContent], { type: 'text/plain;charset=utf-8;' });
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = fileName + '.txt';
+                    link.click();
+                }
+            };
+
+            const downloadChart = () => {
+                if (!chartRef.current) {
+                    alert('Não há gráfico para baixar. Por favor, calcule a média histórica primeiro.');
+                    return;
+                }
+
+                const canvas = chartRef.current;
+                const fileName = `Grafico_Cambio_${fromCurrency}_${toCurrency}_${startDate}_${endDate}`;
+
+                if (imageFormat === 'svg') {
+                    alert('Formato SVG: Para melhor qualidade, use PNG ou JPG. SVG requer conversão especial do Canvas.');
+                    return;
+                }
+
+                // Criar canvas temporário com fundo branco
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = canvas.width;
+                tempCanvas.height = canvas.height;
+                const tempCtx = tempCanvas.getContext('2d');
+
+                // Preencher com fundo branco
+                tempCtx.fillStyle = '#FFFFFF';
+                tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+
+                // Desenhar o gráfico original por cima
+                tempCtx.drawImage(canvas, 0, 0);
+
+                // Configurar formato de exportação
+                let mimeType, extension;
+                if (imageFormat === 'png') {
+                    mimeType = 'image/png';
+                    extension = 'png';
+                } else if (imageFormat === 'jpg' || imageFormat === 'jpeg') {
+                    mimeType = 'image/jpeg';
+                    extension = 'jpg';
+                } else if (imageFormat === 'webp') {
+                    mimeType = 'image/webp';
+                    extension = 'webp';
+                }
+
+                // Converter para imagem com qualidade 95%
+                const url = tempCanvas.toDataURL(mimeType, 0.95);
+                
+                // Criar link de download
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `${fileName}.${extension}`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            };
+
+            return (
+                <div className="container">
+                    <header>
+                        <h1>Média Histórica Cambial</h1>
+                        <div className="subtitle">Calcule a Média Histórica de Taxas</div>
+                    </header>
+                    {/* 🎯 ESPAÇO PARA ANÚNCIO TOPO */}
+                    <div className="ad-container ad-top">
+                        <div className="ad-placeholder">
+                            {/* 📍 COLE AQUI O CÓDIGO DO GOOGLE ADSENSE */}
+                            {/* Tamanho recomendado: 728x90 ou Responsivo */}
+                            📢 Espaço para Anúncio (728x90)
+                        </div>
+                    </div>
+
+                    <div className="main-content-wrapper">
+                        <div className="main-content">
+                            <div className="converter-card">
+                                <div className="date-range-selector">
+                                    <div className="date-range-title">Selecione o Período</div>
+                                    <div className="date-inputs">
+                                        <div className="date-input-group">
+                                            <label>Data de Início</label>
+                                            <input 
+                                                type="date" 
+                                                value={startDate}
+                                                onChange={(e) => setStartDate(e.target.value)}
+                                                max={endDate || getTodayDate()}
+                                                min="1999-01-04"
+                                            />
+                                        </div>
+                                        <div className="date-input-group">
+                                            <label>Data de Fim</label>
+                                            <input 
+                                                type="date" 
+                                                value={endDate}
+                                                onChange={(e) => setEndDate(e.target.value)}
+                                                max={getTodayDate()}
+                                                min={startDate || "1999-01-04"}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="currency-selectors">
+                                    <div className="currency-select-group">
+                                        <label>De</label>
+                                        <select 
+                                            value={fromCurrency} 
+                                            onChange={(e) => setFromCurrency(e.target.value)}
+                                        >
+                                            {Object.keys(currencies).map(code => (
+                                                <option key={code} value={code}>
+                                                    {currencies[code].flag} {code} - {currencies[code].name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+
+                                    <button className="swap-button" onClick={swapCurrencies}>
+                                        ⇄
+                                    </button>
+
+                                    <div className="currency-select-group">
+                                        <label>Para</label>
+                                        <select 
+                                            value={toCurrency} 
+                                            onChange={(e) => setToCurrency(e.target.value)}
+                                        >
+                                            {Object.keys(currencies).map(code => (
+                                                <option key={code} value={code}>
+                                                    {currencies[code].flag} {code} - {currencies[code].name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <button 
+                                    className="calculate-button" 
+                                    onClick={calculateAverage}
+                                    disabled={loading}
+                                >
+                                    {loading ? 'Calculando...' : '📊 Calcular Média Histórica'}
+                                </button>
+
+                                {error && (
+                                    <div className="error-message">
+                                        ⚠️ {error}
+                                    </div>
+                                )}
+
+                                {loading && (
+                                    <div className="loading">
+                                        <div className="spinner"></div>
+                                        <div>Coletando dados históricos...</div>
+                                    </div>
+                                )}
+
+                                {results && (
+                                    <div className="results-container">
+                                        <div className="stats-grid">
+                                            <div className="stat-card">
+                                                <div className="stat-label">Média</div>
+                                                <div className="stat-value">{results.average.toFixed(4)}</div>
+                                                <div className="stat-subtext">1 {fromCurrency} = {results.average.toFixed(4)} {toCurrency}</div>
+                                            </div>
+                                            <div className="stat-card">
+                                                <div className="stat-label">Mínima</div>
+                                                <div className="stat-value">{results.min.toFixed(4)}</div>
+                                                <div className="stat-subtext">Menor taxa do período</div>
+                                            </div>
+                                            <div className="stat-card">
+                                                <div className="stat-label">Máxima</div>
+                                                <div className="stat-value">{results.max.toFixed(4)}</div>
+                                                <div className="stat-subtext">Maior taxa do período</div>
+                                            </div>
+                                            <div className="stat-card">
+                                                <div className="stat-label">Variação</div>
+                                                <div className="stat-value">{((results.max - results.min) / results.min * 100).toFixed(2)}%</div>
+                                                <div className="stat-subtext">Amplitude do período</div>
+                                            </div>
+                                        </div>
+
+                                        <div className="download-buttons-container">
+                                            <div className="download-button-wrapper">
+                                                <select 
+                                                    className="format-selector" 
+                                                    value={dataFormat} 
+                                                    onChange={(e) => setDataFormat(e.target.value)}
+                                                    title="Selecione o formato de exportação dos dados"
+                                                >
+                                                    <option value="xlsx">📊 Excel (.xlsx)</option>
+                                                    <option value="csv">📄 CSV (.csv)</option>
+                                                    <option value="json">🔧 JSON (.json)</option>
+                                                    <option value="txt">📝 Texto (.txt)</option>
+                                                </select>
+                                                <button 
+                                                    className="download-excel-button" 
+                                                    onClick={exportToExcel}
+                                                    title="Baixar dados no formato selecionado"
+                                                >
+                                                    📥 Baixar Dados
+                                                </button>
+                                            </div>
+
+                                            <div className="download-button-wrapper">
+                                                <select 
+                                                    className="format-selector" 
+                                                    value={imageFormat} 
+                                                    onChange={(e) => setImageFormat(e.target.value)}
+                                                    title="Selecione o formato de exportação da imagem"
+                                                >
+                                                    <option value="png">🖼️ PNG (.png)</option>
+                                                    <option value="jpg">📸 JPEG (.jpg)</option>
+                                                    <option value="webp">🎨 WebP (.webp)</option>
+                                                    <option value="svg">📐 SVG (.svg)</option>
+                                                </select>
+                                                <button 
+                                                    className="download-chart-button" 
+                                                    onClick={downloadChart}
+                                                    title="Baixar gráfico no formato selecionado"
+                                                >
+                                                    📊 Baixar Gráfico
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div className="chart-container">
+                                            <div className="chart-title">
+                                                Evolução da Taxa de Câmbio
+                                                <div style={{fontSize: '0.8rem', color: '#778DA9', marginTop: '5px'}}>
+                                                    {formatDate(startDate)} até {formatDate(endDate)} ({(() => {
+                                                        const start = new Date(startDate);
+                                                        const end = new Date(endDate);
+                                                        const diffTime = Math.abs(end - start);
+                                                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+                                                        return `${diffDays} dias corridos, ${results.totalDays} dias úteis`;
+                                                    })()})
+                                                </div>
+                                            </div>
+                                            <div style={{position: 'relative', height: '400px'}}>
+                                                <canvas ref={chartRef}></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* 🎯 ESPAÇO PARA ANÚNCIO MEIO */}
+                            <div className="ad-container ad-middle">
+                                <div className="ad-placeholder">
+                                    {/* 📍 COLE AQUI O CÓDIGO DO GOOGLE ADSENSE */}
+                                    {/* Tamanho recomendado: Responsivo */}
+                                    📢 Espaço para Anúncio (Responsivo)
+                                </div>
+                            </div>
+
+                            {/* 📊 SEÇÃO DE METODOLOGIA */}
+                            <article className="seo-content" style={{background: 'rgba(10, 47, 53, 0.4)', borderColor: 'rgba(0, 255, 163, 0.2)'}}>
+                                <h2>🔬 Metodologia e Fonte de Dados</h2>
+                                
+                                <h3>📡 Fonte Oficial: Banco Central Europeu (ECB)</h3>
+                                <p>
+                                    Nossa ferramenta de média histórica utiliza exclusivamente dados do <strong>Banco Central Europeu (ECB) </strong> 
+                                    através da API Frankfurter. O ECB publica diariamente taxas de câmbio de referência que são 
+                                    utilizadas por instituições financeiras, governos e organizações internacionais.
+                                </p>
+
+                                <h3>📊 Cálculo da Média Histórica</h3>
+                                <p>
+                                    A média histórica é calculada utilizando apenas <strong>dias úteis</strong> (dias em que o 
+                                    mercado cambial operou). O cálculo segue este processo:
+                                </p>
+                                <ul>
+                                    <li><strong>Coleta:</strong> Obtém todas as taxas de dias úteis no período selecionado</li>
+                                    <li><strong>Conversão:</strong> Converte via EUR quando necessário (conversão triangular)</li>
+                                    <li><strong>Média Aritmética:</strong> Soma todas as taxas e divide pelo número de dias úteis</li>
+                                    <li><strong>Estatísticas:</strong> Identifica valores mínimo e máximo do período</li>
+                                </ul>
+
+                                <h3>📅 Período Disponível e Limitações</h3>
+                                <ul>
+                                    <li><strong>Início dos dados:</strong> 4 de janeiro de 1999 (introdução do Euro)</li>
+                                    <li><strong>Apenas dias úteis:</strong> Fins de semana e feriados não têm taxas publicadas</li>
+                                    <li><strong>Horário de publicação:</strong> ECB publica por volta das 16:00 CET</li>
+                                    <li><strong>Integridade:</strong> Dados oficiais sem interpolação ou estimativas</li>
+                                </ul>
+
+                                <h3>💡 Interpretação dos Resultados</h3>
+                                <p>
+                                    A média histórica é útil para:
+                                </p>
+                                <ul>
+                                    <li>✅ Identificar tendências de longo prazo</li>
+                                    <li>✅ Planejar contratos e orçamentos futuros</li>
+                                    <li>✅ Avaliar volatilidade cambial (amplitude min-max)</li>
+                                    <li>✅ Comparar períodos históricos diferentes</li>
+                                </ul>
+                                <p style={{marginTop: '15px', padding: '15px', background: 'rgba(212, 175, 55, 0.1)', borderLeft: '4px solid var(--secondary)', borderRadius: '4px'}}>
+                                    <strong>⚠️ Nota Importante:</strong> Médias históricas não preveem comportamento futuro. 
+                                    Use-as como referência informativa, não como base única para decisões de investimento 
+                                    ou hedge cambial.
+                                </p>
+
+                                <p style={{marginTop: '20px', fontSize: '0.9rem', color: 'var(--text-muted)'}}>
+                                    <strong>API Utilizada:</strong> Frankfurter API (<a href="https://www.frankfurter.app" target="_blank" rel="noopener noreferrer" style={{color: 'var(--accent)'}}>frankfurter.app</a>)<br/>
+                                    <strong>Fonte Primária:</strong> European Central Bank (ECB)<br/>
+                                    <strong>Método de Cálculo:</strong> Média aritmética simples de dias úteis
+                                </p>
+                            </article>
+
+                            {/* 🎯 ESPAÇO PARA ANÚNCIO RODAPÉ */}
+                            <div className="ad-container ad-bottom">
+                                <div className="ad-placeholder">
+                                    {/* 📍 COLE AQUI O CÓDIGO DO GOOGLE ADSENSE */}
+                                    {/* Tamanho recomendado: 728x90 ou Responsivo */}
+                                    📢 Espaço para Anúncio (728x90)
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* 🎯 ESPAÇO PARA ANÚNCIO SIDEBAR (apenas desktop) */}
+                        <aside className="ad-sidebar">
+                            <div className="ad-placeholder">
+                                {/* 📍 COLE AQUI O CÓDIGO DO GOOGLE ADSENSE */}
+                                {/* Tamanho recomendado: 300x600 ou 160x600 */}
+                                📢 Anúncio Vertical<br/>(300x600)
+                            </div>
+                        </aside>
+                    </div>
+
+                    <footer>
+                        <p>© 2026 Conversor Cambial - Todos os direitos reservados</p>
+                        <p>
+                            <a href="privacy-policy.html">Política de Privacidade</a> | 
+                            <a href="termos-de-uso.html"> Termos de Uso</a>
+                        </p>
+                        <p style={{marginTop: '15px', fontSize: '0.85rem'}}>
+                            Taxas fornecidas pelo Banco Central Europeu (ECB) através da Frankfurter API. 
+                            As taxas são apenas para fins informativos e podem diferir das taxas comerciais reais.
+                        </p>
+                    </footer>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<HistoricalConverter />, document.getElementById('root'));
+    </script>
+
+    <!-- JAVASCRIPT PARA MENU MOBILE -->
+    <script>
+        const mobileToggle = document.getElementById('mobileToggle');
+        const navMenu = document.getElementById('navMenu');
+
+        mobileToggle.addEventListener('click', () => {
+            mobileToggle.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        // Fecha o menu ao clicar em um link (mobile)
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    mobileToggle.classList.remove('active');
+                    navMenu.classList.remove('active');
+                }
+            });
+        });
+
+        // Fecha o menu ao redimensionar para desktop
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                mobileToggle.classList.remove('active');
+                navMenu.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Termos de Uso - Câmbio Free</title>
+    <meta name="description" content="Termos de Uso do Câmbio Free. Leia os termos e condições para utilização de nossos serviços de conversão de moedas.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Playfair+Display:wght@600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0A2F35;
+            --secondary: #D4AF37;
+            --accent: #00FFA3;
+            --surface: #0D1B2A;
+            --surface-light: #1B263B;
+            --text: #E0E1DD;
+            --text-muted: #778DA9;
+        }
+
+        body {
+            font-family: 'Space Mono', monospace;
+            background: linear-gradient(135deg, var(--surface) 0%, var(--primary) 100%);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(0, 255, 163, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ==== NAVEGAÇÃO ==== */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(13, 27, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text);
+            font-size: 1.3rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .nav-logo:hover {
+            color: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .logo-icon {
+            font-size: 1.8rem;
+            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.4));
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            list-style: none;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            text-decoration: none;
+            color: var(--text);
+            font-size: 0.95rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .nav-link:hover {
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(0, 255, 163, 0.1));
+            color: var(--secondary);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+        }
+
+        .nav-icon {
+            font-size: 1.1rem;
+        }
+
+        .nav-cta {
+            background: linear-gradient(135deg, var(--secondary), var(--accent));
+            color: var(--surface);
+            font-weight: 700;
+            padding: 10px 24px;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4);
+        }
+
+        .mobile-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .mobile-toggle span {
+            width: 25px;
+            height: 3px;
+            background: var(--secondary);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(7px, 7px);
+        }
+
+        .mobile-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        /* ==== CONTEÚDO PRINCIPAL ==== */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+        }
+
+        .update-date {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        /* ==== CONTEÚDO DOS TERMOS ==== */
+        .terms-content {
+            background: rgba(27, 38, 59, 0.4);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 16px;
+            padding: 40px;
+            line-height: 1.8;
+        }
+
+        .terms-content h2 {
+            font-family: 'Playfair Display', serif;
+            color: var(--secondary);
+            font-size: 1.8rem;
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+
+        .terms-content h2:first-child {
+            margin-top: 0;
+        }
+
+        .terms-content h3 {
+            color: var(--accent);
+            font-size: 1.3rem;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+
+        .terms-content p {
+            margin-bottom: 15px;
+            color: var(--text);
+        }
+
+        .terms-content ul,
+        .terms-content ol {
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+
+        .terms-content li {
+            margin-bottom: 10px;
+        }
+
+        .highlight-box {
+            background: rgba(212, 175, 55, 0.1);
+            border-left: 4px solid var(--secondary);
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 4px;
+        }
+
+        .highlight-box strong {
+            color: var(--secondary);
+        }
+
+        /* ==== FOOTER ==== */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 80px;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: var(--secondary);
+        }
+
+        /* ==== RESPONSIVIDADE ==== */
+        @media (max-width: 768px) {
+            .mobile-toggle {
+                display: flex;
+            }
+
+            .nav-menu {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                right: 0;
+                flex-direction: column;
+                background: rgba(13, 27, 42, 0.98);
+                backdrop-filter: blur(10px);
+                padding: 20px;
+                gap: 0;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.4s ease;
+                border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            }
+
+            .nav-menu.active {
+                max-height: 400px;
+            }
+
+            .nav-link {
+                width: 100%;
+                padding: 15px 20px;
+                justify-content: flex-start;
+            }
+
+            .nav-cta {
+                width: 100%;
+                margin-top: 10px;
+            }
+
+            .terms-content {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVEGAÇÃO PROFISSIONAL -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <!-- Logo -->
+            <a href="termos-de-uso.html" class="nav-logo">
+                <span class="logo-icon">💱</span>
+                <span>Câmbio Free</span>
+            </a>
+
+            <!-- Menu Principal -->
+            <ul class="nav-menu" id="navMenu">
+                <li class="nav-item">
+                    <a class="nav-link">
+                        <span class="nav-icon">🔄</span>
+                        <span>Conversor de Moedas (Em Breve)</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <span class="nav-icon">📊</span>
+                        <span>Média Histórica</span>
+                    </a>
+                </li>
+            </ul>
+
+            <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1>Termos de Uso</h1>
+            <p class="subtitle">Condições Gerais</p>
+            <p class="update-date">Última atualização: Dezembro de 2024</p>
+        </header> (EN
+
+        <div class="terms-content">
+            <h2>1. Aceitação dos Termos</h2>
+            <p>
+                Ao acessar e utilizar o Câmbio Free ("Serviço"), você concorda em cumprir e estar vinculado 
+                aos seguintes termos e condições de uso. Se você não concorda com qualquer parte destes termos, 
+                não deve utilizar nosso serviço.
+            </p>
+
+            <h2>2. Descrição do Serviço</h2>
+            <p>
+                O Câmbio Free é uma ferramenta online gratuita que fornece:
+            </p>
+            <ul>
+                <li>Conversão de moedas baseada em taxas de câmbio de referência</li>
+                <li>Acesso a dados históricos de taxas de câmbio desde 1999</li>
+                <li>Cálculo de médias históricas para períodos personalizados</li>
+                <li>Informações educacionais sobre câmbio e conversão de moedas</li>
+            </ul>
+
+            <h2>3. Fonte de Dados e Limitações</h2>
+            
+            <h3>3.1 Fonte dos Dados</h3>
+            <p>
+                Todas as taxas de câmbio são obtidas do Banco Central Europeu (ECB) através da API Frankfurter. 
+                Os dados representam taxas de referência oficiais publicadas pelo ECB.
+            </p>
+
+            <h3>3.2 Natureza Informativa</h3>
+            <div class="highlight-box">
+                <p><strong>⚠️ AVISO IMPORTANTE:</strong></p>
+                <p>
+                    As taxas de câmbio fornecidas são <strong>apenas para fins informativos e educacionais</strong>. 
+                    Estas taxas NÃO devem ser utilizadas como base única para:
+                </p>
+                <ul>
+                    <li>Transações financeiras comerciais</li>
+                    <li>Trading ou especulação cambial</li>
+                    <li>Liquidações bancárias ou transferências internacionais</li>
+                    <li>Decisões de investimento</li>
+                    <li>Contratos ou hedge cambial profissional</li>
+                </ul>
+            </div>
+
+            <h3>3.3 Diferenças com Taxas Comerciais</h3>
+            <p>
+                As taxas comerciais reais aplicadas por bancos, casas de câmbio e instituições financeiras 
+                incluem spreads (diferença entre compra e venda), taxas de serviço e outros custos não 
+                refletidos em nossas taxas de referência.
+            </p>
+
+            <h2>4. Limitação de Responsabilidade</h2>
+
+            <h3>4.1 Precisão dos Dados</h3>
+            <p>
+                Embora nos esforcemos para fornecer informações precisas e atualizadas, não garantimos:
+            </p>
+            <ul>
+                <li>A precisão absoluta das taxas de câmbio em tempo real</li>
+                <li>A disponibilidade ininterrupta do serviço</li>
+                <li>A ausência de erros técnicos ou de transmissão de dados</li>
+                <li>A adequação das informações para qualquer propósito específico</li>
+            </ul>
+
+            <h3>4.2 Exclusão de Garantias</h3>
+            <p>
+                O serviço é fornecido "COMO ESTÁ" e "CONFORME DISPONÍVEL", sem garantias de qualquer tipo, 
+                expressas ou implícitas, incluindo, mas não se limitando a, garantias de:
+            </p>
+            <ul>
+                <li>Comercialização</li>
+                <li>Adequação a uma finalidade específica</li>
+                <li>Não violação de direitos de terceiros</li>
+                <li>Precisão ou confiabilidade das informações</li>
+            </ul>
+
+            <h3>4.3 Limitação de Danos</h3>
+            <p>
+                Em nenhuma circunstância o Câmbio Free, seus proprietários, funcionários ou parceiros 
+                serão responsáveis por quaisquer danos diretos, indiretos, incidentais, especiais, consequentes 
+                ou punitivos resultantes de:
+            </p>
+            <ul>
+                <li>Uso ou incapacidade de usar o serviço</li>
+                <li>Decisões financeiras tomadas com base nas informações fornecidas</li>
+                <li>Erros ou omissões nas taxas de câmbio apresentadas</li>
+                <li>Interrupções ou falhas técnicas do serviço</li>
+            </ul>
+
+            <h2>5. Uso Aceitável</h2>
+
+            <h3>5.1 Uso Pessoal e Não-Comercial</h3>
+            <p>
+                O serviço é destinado ao uso pessoal e não-comercial. Você concorda em não:
+            </p>
+            <ul>
+                <li>Reproduzir, duplicar ou copiar o serviço para fins comerciais</li>
+                <li>Realizar scraping automatizado de dados sem autorização prévia</li>
+                <li>Sobrecarregar a infraestrutura com requisições excessivas</li>
+                <li>Utilizar o serviço para atividades ilegais ou fraudulentas</li>
+                <li>Distribuir vírus, malware ou qualquer código malicioso</li>
+            </ul>
+
+            <h3>5.2 Uso Comercial e API</h3>
+            <p>
+                Para uso comercial, integração via API ou volumes elevados de requisições, 
+                entre em contato através da página de <a href="contato.html" style="color: var(--accent);">Contato</a> 
+                para discutir termos específicos.
+            </p>
+
+            <h2>6. Propriedade Intelectual</h2>
+            <p>
+                Todo o conteúdo do site, incluindo mas não limitado a design, layout, código, gráficos e textos, 
+                é propriedade do Câmbio Free ou de seus licenciadores e está protegido por leis de direitos 
+                autorais e propriedade intelectual.
+            </p>
+
+            <h2>7. Links de Terceiros</h2>
+            <p>
+                Nosso serviço pode conter links para sites de terceiros. Não somos responsáveis pelo conteúdo, 
+                políticas de privacidade ou práticas de sites de terceiros.
+            </p>
+
+            <h2>8. Coleta de Dados e Privacidade</h2>
+            <p>
+                O uso de informações pessoais coletadas através do nosso serviço é regido por nossa 
+                <a href="privacy-policy.html" style="color: var(--accent);">Política de Privacidade</a>.
+            </p>
+
+            <h2>9. Modificações dos Termos</h2>
+            <p>
+                Reservamo-nos o direito de modificar estes termos a qualquer momento. Alterações significativas 
+                serão comunicadas através do site. O uso continuado do serviço após modificações constitui 
+                aceitação dos novos termos.
+            </p>
+
+            <h2>10. Isenção de Consultoria</h2>
+            <div class="highlight-box">
+                <p><strong>O Câmbio Free NÃO fornece:</strong></p>
+                <ul>
+                    <li>Consultoria financeira, de investimentos ou cambial</li>
+                    <li>Recomendações sobre quando comprar ou vender moedas</li>
+                    <li>Aconselhamento jurídico ou fiscal relacionado a câmbio</li>
+                    <li>Garantias sobre movimentos futuros de moedas</li>
+                </ul>
+                <p>
+                    Para decisões financeiras importantes, consulte sempre um profissional qualificado 
+                    (contador, consultor financeiro ou instituição bancária).
+                </p>
+            </div>
+
+            <h2>11. Disponibilidade do Serviço</h2>
+            <p>
+                Não garantimos que o serviço estará disponível ininterruptamente ou livre de erros. 
+                Reservamo-nos o direito de:
+            </p>
+            <ul>
+                <li>Suspender ou descontinuar o serviço temporária ou permanentemente</li>
+                <li>Realizar manutenções sem aviso prévio</li>
+                <li>Modificar funcionalidades e recursos do serviço</li>
+            </ul>
+
+            <h2>12. Legislação Aplicável</h2>
+            <p>
+                Estes termos são regidos e interpretados de acordo com as leis do Brasil. 
+                Quaisquer disputas relacionadas a estes termos serão resolvidas nos tribunais brasileiros.
+            </p>
+
+            <h2>13. Divisibilidade</h2>
+            <p>
+                Se qualquer disposição destes termos for considerada inválida ou inexequível, as disposições 
+                restantes permanecerão em pleno vigor e efeito.
+            </p>
+
+            <h2>14. Contato</h2>
+            <p>
+                Para questões sobre estes Termos de Uso, entre em contato através de:
+            </p>
+            <p>
+                <strong>E-mail:</strong> <a href="mailto:cambiofree_2025@gmail.com" style="color: var(--accent);">cambiofree_2025@gmail.com</a><br/>
+            </p>
+
+            <div class="highlight-box" style="margin-top: 40px;">
+                <p><strong>📜 Resumo Importante:</strong></p>
+                <p>
+                    Use este serviço para referência e informação. Para transações financeiras reais, 
+                    sempre consulte sua instituição financeira. Não nos responsabilizamos por decisões 
+                    tomadas com base nas informações fornecidas.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 Câmbio Free - Todos os direitos reservados</p>
+        <p>
+            <a href="privacy-policy.html">Política de Privacidade</a> | 
+            <a href="termos-de-uso.html">Termos de Uso</a>
+            
+        </p>
+        <p style="margin-top: 15px; font-size: 0.85rem;">
+            Taxas fornecidas pelo Banco Central Europeu (ECB) através da Frankfurter API. 
+            As taxas são apenas para fins informativos e podem diferir das taxas comerciais reais.
+        </p>
+    </footer>
+
+    <script>
+        // Menu mobile
+        const mobileToggle = document.getElementById('mobileToggle');
+        const navMenu = document.getElementById('navMenu');
+
+        mobileToggle.addEventListener('click', () => {
+            mobileToggle.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    mobileToggle.classList.remove('active');
+                    navMenu.classList.remove('active');
+                }
+            });
+        });
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                mobileToggle.classList.remove('active');
+                navMenu.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
