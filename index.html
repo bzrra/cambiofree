@@ -3,10 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conversor Cambial - Média Histórica</title>
-    <meta name="description" content="Calcule a média histórica de conversão entre moedas em qualquer período desde 1999. Visualize gráficos e tendências.">
+    <title>Conversor de Moedas e Média Histórica Cambial | Câmbio Free</title>
+    <meta name="description" content="Conversor de moedas gratuito com taxas em tempo real e cálculo de média histórica desde 1999. Entenda taxas de câmbio e tome decisões informadas.">
+    <meta name="keywords" content="conversor de moedas, taxa de câmbio, média histórica cambial, dólar, euro, real, cotação, forex">
     
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6584010580751654" crossorigin="anonymous"></script>
+    <!-- ============================================
+         OTIMIZADO PARA EZOIC
+         ============================================
+         Este arquivo foi otimizado para monetização via Ezoic.
+         
+         Como funciona:
+         1. Crie sua conta em: https://www.ezoic.com
+         2. Adicione seu domínio ao Ezoic
+         3. Configure via Nameservers (mais fácil) ou Cloudflare
+         4. Ezoic injetará anúncios automaticamente usando IA
+         5. A plataforma testará posicionamentos e otimizará RPM
+         
+         Requisitos:
+         - Domínio próprio registrado
+         - ~10.000 visitas/mês (não é regra rígida)
+         - Conteúdo original
+         - Google Analytics instalado (recomendado)
+         
+         Não precisa modificar este código!
+         ============================================ -->
+    
+    <!-- Se quiser usar AdSense Mediation no futuro (AdSense + outras redes via Ezoic): -->
+    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6584010580751654" crossorigin="anonymous"></script> -->
     
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -249,38 +272,10 @@
             text-transform: uppercase;
         }
 
-        .ad-container {
-            margin: 30px auto;
-            padding: 20px;
-            background: rgba(27, 38, 59, 0.3);
-            border: 1px dashed rgba(212, 175, 55, 0.3);
-            border-radius: 12px;
-            text-align: center;
-            min-height: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
 
-        .ad-placeholder {
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            padding: 10px;
-        }
 
-        .ad-top {
-            animation: fadeInDown 0.8s ease-out 0.1s both;
-            max-width: 728px;
-        }
 
-        .ad-middle {
-            animation: fadeIn 0.8s ease-out 0.3s both;
-        }
 
-        .ad-bottom {
-            animation: fadeInUp 0.8s ease-out 0.5s both;
-            max-width: 728px;
-        }
 
         .seo-content {
             background: rgba(27, 38, 59, 0.4);
@@ -305,6 +300,13 @@
             margin-bottom: 10px;
         }
 
+        .seo-content h4 {
+            color: var(--secondary);
+            font-size: 0.95rem;
+            margin-top: 15px;
+            margin-bottom: 8px;
+        }
+
         .seo-content p {
             line-height: 1.8;
             margin-bottom: 15px;
@@ -312,7 +314,7 @@
             font-size: 0.9rem;
         }
 
-        .seo-content ul {
+        .seo-content ul, .seo-content ol {
             margin-left: 30px;
             margin-bottom: 20px;
         }
@@ -321,6 +323,46 @@
             margin-bottom: 8px;
             line-height: 1.6;
             font-size: 0.85rem;
+        }
+
+        .info-box, .highlight-box {
+            background: rgba(0, 255, 163, 0.08);
+            border-left: 4px solid var(--accent);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+
+        .highlight-box {
+            background: rgba(212, 175, 55, 0.1);
+            border-left-color: var(--secondary);
+        }
+
+        .faq-item {
+            background: rgba(10, 47, 53, 0.4);
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            border-color: var(--secondary);
+            background: rgba(10, 47, 53, 0.6);
+        }
+
+        .faq-question {
+            color: var(--secondary);
+            font-size: 1rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .faq-answer {
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 0.9rem;
         }
 
         @media (max-width: 768px) {
@@ -338,29 +380,16 @@
         }
 
         .main-content-wrapper {
-            display: grid;
-            grid-template-columns: 1fr 300px;
-            gap: 30px;
-            align-items: start;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 30px;
         }
+
 
         .main-content {
             min-width: 0;
         }
 
-        .ad-sidebar {
-            position: sticky;
-            top: 20px;
-            background: rgba(27, 38, 59, 0.4);
-            border: 1px dashed rgba(212, 175, 55, 0.3);
-            border-radius: 12px;
-            padding: 20px;
-            min-height: 600px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-        }
 
         .converter-card {
             background: rgba(27, 38, 59, 0.6);
@@ -761,11 +790,7 @@
 
         @media (max-width: 1024px) {
             .main-content-wrapper {
-                grid-template-columns: 1fr;
-            }
-            
-            .ad-sidebar {
-                display: none;
+                padding: 0 20px;
             }
 
             .date-inputs {
@@ -825,15 +850,27 @@
 
             <ul class="nav-menu" id="navMenu">
                 <li class="nav-item">
-                    <a class="nav-link">
-                        <span class="nav-icon">🔄</span>
-                        <span>Conversor de Moedas (Em Breve)</span>
+                    <a href="#o-que-e" class="nav-link">
+                        <span class="nav-icon">📖</span>
+                        <span>O Que É</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="index.html" class="nav-link active">
-                        <span class="nav-icon">📊</span>
-                        <span>Média Histórica</span>
+                    <a href="#por-que-usar" class="nav-link">
+                        <span class="nav-icon">💡</span>
+                        <span>Por Que Usar</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#faq" class="nav-link">
+                        <span class="nav-icon">❓</span>
+                        <span>FAQ</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="privacy-policy.html" class="nav-link">
+                        <span class="nav-icon">🔒</span>
+                        <span>Privacidade</span>
                     </a>
                 </li>
             </ul>
@@ -910,7 +947,6 @@
             useEffect(() => {
                 // Inicializa os anúncios do AdSense
                 try {
-                    (window.adsbygoogle = window.adsbygoogle || []).push({});
                 } catch (e) {
                     console.error('AdSense error:', e);
                 }
@@ -1257,14 +1293,7 @@
                         <div className="subtitle">Calcule a Média Histórica de Taxas</div>
                     </header>
 
-                    <div className="ad-container ad-top">
-                        <ins className="adsbygoogle"
-                             style={{display: 'block'}}
-                             data-ad-client="ca-pub-6584010580751654"
-                             data-ad-slot="INSIRA_SEU_SLOT_AQUI"
-                             data-ad-format="auto"
-                             data-full-width-responsive="true"></ins>
-                    </div>
+                    {/* Ezoic injetará anúncios automaticamente aqui */}
 
                     <div className="main-content-wrapper">
                         <div className="main-content">
@@ -1440,14 +1469,304 @@
                                 )}
                             </div>
 
-                            <div className="ad-container ad-middle">
-                                <ins className="adsbygoogle"
-                                     style={{display: 'block'}}
-                                     data-ad-client="ca-pub-6584010580751654"
-                                     data-ad-slot="INSIRA_SEU_SLOT_AQUI"
-                                     data-ad-format="auto"
-                                     data-full-width-responsive="true"></ins>
-                            </div>
+                            {/* Ezoic injetará anúncios automaticamente aqui */}
+
+                            <article id="o-que-e" className="seo-content">
+                                <h2>💰 O Que São Taxas de Câmbio?</h2>
+                                
+                                <p>
+                                    A <strong>taxa de câmbio</strong> é o preço de uma moeda expressa em termos de outra moeda. 
+                                    Em outras palavras, ela indica quanto você precisa de uma moeda para comprar uma unidade de outra. 
+                                    Por exemplo, se a taxa USD/BRL é 5,50, significa que você precisa de R$ 5,50 para comprar US$ 1,00.
+                                </p>
+
+                                <p>
+                                    As taxas de câmbio são fundamentais para o comércio internacional, turismo, investimentos e qualquer 
+                                    transação que envolva moedas diferentes. Elas flutuam constantemente devido a diversos fatores econômicos, 
+                                    políticos e de mercado.
+                                </p>
+
+                                <h3>📊 Para Que Servem as Taxas de Câmbio?</h3>
+                                
+                                <ul>
+                                    <li>
+                                        <strong>Comércio Internacional:</strong> Empresas que importam ou exportam precisam converter 
+                                        moedas para realizar pagamentos e receber valores de clientes estrangeiros.
+                                    </li>
+                                    <li>
+                                        <strong>Turismo:</strong> Viajantes precisam trocar sua moeda local pela moeda do país de destino 
+                                        para pagar hospedagem, alimentação e outros gastos.
+                                    </li>
+                                    <li>
+                                        <strong>Investimentos:</strong> Investidores que aplicam em ativos denominados em moedas estrangeiras 
+                                        (ações, títulos, fundos) precisam acompanhar as taxas de câmbio para calcular retornos reais.
+                                    </li>
+                                    <li>
+                                        <strong>Remessas Internacionais:</strong> Pessoas que enviam dinheiro para familiares no exterior 
+                                        ou recebem pagamentos de freelance internacional dependem das taxas de conversão.
+                                    </li>
+                                    <li>
+                                        <strong>Hedge Cambial:</strong> Empresas e investidores usam instrumentos financeiros baseados em 
+                                        taxas de câmbio para se proteger contra variações adversas.
+                                    </li>
+                                </ul>
+
+                                <h3>⚙️ Como as Taxas de Câmbio São Calculadas?</h3>
+                                
+                                <p>
+                                    As taxas de câmbio são determinadas pelo <strong>mercado cambial global (Forex)</strong>, onde moedas 
+                                    são compradas e vendidas 24 horas por dia. O preço é estabelecido pela oferta e demanda:
+                                </p>
+
+                                <ul>
+                                    <li>
+                                        <strong>Oferta e Demanda:</strong> Quando há mais demanda por uma moeda, seu valor aumenta. 
+                                        Por exemplo, se investidores globais querem comprar ações brasileiras, precisam de reais, 
+                                        aumentando a demanda e valorizando o BRL.
+                                    </li>
+                                    <li>
+                                        <strong>Taxas de Juros:</strong> Países com juros mais altos atraem capital estrangeiro, 
+                                        aumentando a demanda por sua moeda. O Brasil, historicamente com juros elevados, 
+                                        exemplifica esse mecanismo.
+                                    </li>
+                                    <li>
+                                        <strong>Inflação:</strong> Moedas de países com baixa inflação tendem a se valorizar, 
+                                        pois mantêm seu poder de compra ao longo do tempo.
+                                    </li>
+                                    <li>
+                                        <strong>Balança Comercial:</strong> Países que exportam mais do que importam (superávit) 
+                                        recebem mais moeda estrangeira, fortalecendo sua moeda local.
+                                    </li>
+                                    <li>
+                                        <strong>Estabilidade Política e Econômica:</strong> Investidores preferem moedas de países 
+                                        com governos estáveis e economias sólidas, evitando riscos geopolíticos.
+                                    </li>
+                                    <li>
+                                        <strong>Intervenção dos Bancos Centrais:</strong> Bancos centrais podem comprar ou vender 
+                                        moedas para influenciar as taxas, estabilizando o mercado ou atingindo objetivos econômicos.
+                                    </li>
+                                </ul>
+
+                                <div className="info-box">
+                                    <p><strong>🔄 Taxas de Referência vs. Taxas Comerciais</strong></p>
+                                    <p>
+                                        As taxas que apresentamos são <strong>taxas de referência interbancárias</strong> do Banco Central Europeu, 
+                                        usadas como padrão global. Na prática, quando você troca dinheiro em um banco ou casa de câmbio, 
+                                        paga uma taxa comercial que inclui um <strong>spread</strong> (margem de lucro) de 2% a 10%. 
+                                        Cartões de crédito internacionais geralmente têm spreads menores (2-4%) do que compra de dinheiro em espécie.
+                                    </p>
+                                </div>
+
+                                <h3>📈 Tipos Principais de Taxas</h3>
+                                
+                                <ul>
+                                    <li>
+                                        <strong>Taxa à Vista (Spot Rate):</strong> Taxa atual para transações imediatas, 
+                                        refletindo o preço instantâneo do mercado.
+                                    </li>
+                                    <li>
+                                        <strong>Taxa Futura (Forward Rate):</strong> Taxa acordada hoje para uma transação futura, 
+                                        usada para proteção (hedge) contra volatilidade.
+                                    </li>
+                                    <li>
+                                        <strong>Taxa Cruzada (Cross Rate):</strong> Taxa entre duas moedas calculada através de 
+                                        uma terceira moeda (geralmente USD ou EUR), como BRL/JPY via USD.
+                                    </li>
+                                </ul>
+                            </article>
+
+                            <article id="por-que-usar" className="seo-content">
+                                <h2>💡 Por Que Calcular a Média Histórica Cambial?</h2>
+                                
+                                <p>
+                                    Calcular a <strong>média histórica das taxas de câmbio</strong> oferece uma perspectiva mais completa 
+                                    do comportamento de um par de moedas ao longo do tempo, ajudando a tomar decisões mais informadas 
+                                    em vez de basear-se apenas na taxa do momento.
+                                </p>
+
+                                <h3>🎯 Principais Benefícios e Aplicações</h3>
+
+                                <div className="highlight-box">
+                                    <h4>1. Planejamento de Viagens Internacionais</h4>
+                                    <p>
+                                        Compare a taxa atual com a média dos últimos 6 ou 12 meses para identificar se este é um 
+                                        bom momento para comprar moeda estrangeira. Se a taxa atual está significativamente abaixo 
+                                        da média, pode ser uma oportunidade favorável.
+                                    </p>
+                                </div>
+
+                                <div className="highlight-box">
+                                    <h4>2. Orçamento Empresarial</h4>
+                                    <p>
+                                        Empresas que importam ou exportam usam médias históricas para projetar custos e receitas futuras 
+                                        em orçamentos anuais. Por exemplo, uma importadora pode orçar com base na média dos últimos 
+                                        24 meses, adicionando uma margem de segurança para volatilidade.
+                                    </p>
+                                </div>
+
+                                <div className="highlight-box">
+                                    <h4>3. Análise de Volatilidade</h4>
+                                    <p>
+                                        Ao observar a diferença entre os valores <strong>mínimo e máximo</strong> no período, você avalia 
+                                        o risco cambial. Uma grande amplitude indica alta volatilidade, sugerindo cautela em decisões 
+                                        de hedge ou investimento.
+                                    </p>
+                                </div>
+
+                                <div className="highlight-box">
+                                    <h4>4. Decisões de Investimento</h4>
+                                    <p>
+                                        Investidores que aplicam em ativos estrangeiros usam médias para entender ciclos cambiais. 
+                                        Por exemplo, se o dólar está historicamente alto contra o real, pode não ser o melhor momento 
+                                        para investir pesado em ativos dolarizados.
+                                    </p>
+                                </div>
+
+                                <div className="highlight-box">
+                                    <h4>5. Contratos de Longo Prazo</h4>
+                                    <p>
+                                        Freelancers e prestadores de serviços internacionais podem usar médias históricas para 
+                                        negociar valores de contratos, garantindo que não serão prejudicados por flutuações extremas.
+                                    </p>
+                                </div>
+
+                                <h3>📊 Como Interpretar a Média Histórica</h3>
+                                
+                                <ul>
+                                    <li>
+                                        <strong>Taxa Atual vs. Média:</strong> Se a taxa atual está muito acima da média histórica, 
+                                        a moeda pode estar "cara". Se está abaixo, pode estar "barata" (mas cuidado: pode haver razões 
+                                        fundamentais para isso).
+                                    </li>
+                                    <li>
+                                        <strong>Tendência de Longo Prazo:</strong> Observar a evolução no gráfico ajuda a identificar 
+                                        se há uma tendência de valorização ou desvalorização consistente.
+                                    </li>
+                                    <li>
+                                        <strong>Volatilidade (Min/Max):</strong> Uma diferença grande entre mínimo e máximo indica 
+                                        mercado instável, exigindo estratégias de proteção.
+                                    </li>
+                                    <li>
+                                        <strong>Períodos de Análise:</strong> Médias de curto prazo (3-6 meses) mostram tendências 
+                                        recentes, enquanto médias longas (1-5 anos) revelam padrões estruturais.
+                                    </li>
+                                </ul>
+
+                                <div className="info-box">
+                                    <p><strong>⚠️ Importante: Médias Não Preveem o Futuro</strong></p>
+                                    <p>
+                                        Embora médias históricas sejam ferramentas valiosas, <strong>elas não garantem comportamento futuro</strong>. 
+                                        O mercado cambial é influenciado por eventos imprevisíveis (crises, mudanças políticas, pandemias). 
+                                        Use médias como referência informativa, não como certeza de para onde as taxas vão.
+                                    </p>
+                                </div>
+
+                                <h3>💼 Exemplo Prático: Empresa de Importação</h3>
+                                <p>
+                                    Imagine uma empresa brasileira que importa produtos dos EUA. Nos últimos 12 meses, o USD/BRL variou entre 
+                                    R$ 4,80 (mínimo) e R$ 5,80 (máximo), com média de R$ 5,30.
+                                </p>
+                                <ul>
+                                    <li>
+                                        <strong>Situação 1:</strong> Hoje o dólar está R$ 4,90. Está 7,5% abaixo da média, 
+                                        sugerindo bom momento para comprar dólares ou fechar contratos.
+                                    </li>
+                                    <li>
+                                        <strong>Situação 2:</strong> Hoje o dólar está R$ 5,70. Está 7,5% acima da média, 
+                                        sugerindo cautela. A empresa pode aguardar ou usar hedge para travar preços.
+                                    </li>
+                                    <li>
+                                        <strong>Planejamento:</strong> Para o orçamento do próximo ano, a empresa pode usar R$ 5,30 
+                                        como base, adicionando 10% de margem de segurança (R$ 5,83) para se proteger.
+                                    </li>
+                                </ul>
+                            </article>
+
+                            <article id="faq" className="seo-content">
+                                <h2>❓ Perguntas Frequentes</h2>
+
+                                <div className="faq-item">
+                                    <h3 className="faq-question">1. As taxas são atualizadas em tempo real?</h3>
+                                    <p className="faq-answer">
+                                        Sim, utilizamos dados do Banco Central Europeu (ECB) atualizados diariamente por volta das 16h CET. 
+                                        São as taxas de referência oficiais usadas globalmente por instituições financeiras.
+                                    </p>
+                                </div>
+
+                                <div className="faq-item">
+                                    <h3 className="faq-question">2. Qual a diferença entre a taxa aqui e a do meu banco?</h3>
+                                    <p className="faq-answer">
+                                        Nossa taxa é interbancária (pura). Bancos adicionam um spread de 2% a 10% dependendo do serviço. 
+                                        Cartões de crédito internacionais têm spreads menores (2-4%) do que compra de dinheiro físico.
+                                    </p>
+                                </div>
+
+                                <div className="faq-item">
+                                    <h3 className="faq-question">3. Posso usar a média histórica para prever o futuro?</h3>
+                                    <p className="faq-answer">
+                                        Não. Médias mostram padrões passados, mas não garantem comportamento futuro. O mercado cambial 
+                                        é afetado por eventos imprevisíveis. Use como referência informativa, não como previsão.
+                                    </p>
+                                </div>
+
+                                <div className="faq-item">
+                                    <h3 className="faq-question">4. Por que alguns pares não estão disponíveis?</h3>
+                                    <p className="faq-answer">
+                                        Usamos dados do ECB, que cobre 30+ moedas principais. Moedas muito pouco líquidas ou de países 
+                                        com controle cambial severo podem não estar disponíveis.
+                                    </p>
+                                </div>
+
+                                <div className="faq-item">
+                                    <h3 className="faq-question">5. O que é o IOF e como me afeta?</h3>
+                                    <p className="faq-answer">
+                                        IOF é um imposto brasileiro: 1,1% para compra de dinheiro em espécie, 4,38% para cartões 
+                                        internacionais, 0,38% para transferências bancárias. É cobrado sobre o valor total da operação.
+                                    </p>
+                                </div>
+
+                                <div className="faq-item">
+                                    <h3 className="faq-question">6. Vocês armazenam meus dados de conversão?</h3>
+                                    <p className="faq-answer">
+                                        Não. Todas as conversões são feitas localmente no seu navegador. Não armazenamos valores, 
+                                        histórico ou informações pessoais. Veja nossa{' '}
+                                        <a href="privacy-policy.html" style={{color: 'var(--accent)'}}>Política de Privacidade</a>.
+                                    </p>
+                                </div>
+
+                                <div className="faq-item">
+                                    <h3 className="faq-question">7. O que é conversão triangular?</h3>
+                                    <p className="faq-answer">
+                                        Para pares não diretamente negociados em alto volume, usamos uma moeda intermediária (EUR ou USD). 
+                                        Por exemplo, BRL → JPY é calculado como BRL → EUR → JPY. É padrão no mercado.
+                                    </p>
+                                </div>
+
+                                <div className="faq-item">
+                                    <h3 className="faq-question">8. Por que taxas não mudam nos fins de semana?</h3>
+                                    <p className="faq-answer">
+                                        O mercado Forex fecha de sexta à noite até domingo à noite. Sem negociações, as taxas permanecem 
+                                        as mesmas. O ECB também não publica taxas em fins de semana e feriados.
+                                    </p>
+                                </div>
+
+                                <div className="faq-item">
+                                    <h3 className="faq-question">9. Posso usar este conversor para investimentos?</h3>
+                                    <p className="faq-answer">
+                                        Somos uma ferramenta informativa. Para decisões de investimento, consulte sempre um assessor 
+                                        financeiro certificado que avalie sua situação pessoal e tolerância ao risco.
+                                    </p>
+                                </div>
+
+                                <div className="faq-item">
+                                    <h3 className="faq-question">10. Como reportar erros ou dar sugestões?</h3>
+                                    <p className="faq-answer">
+                                        Entre em contato através do e-mail:{' '}
+                                        <a href="mailto:cambiofree_2025@gmail.com" style={{color: 'var(--accent)'}}>cambiofree_2025@gmail.com</a>. 
+                                        Sua opinião é muito importante!
+                                    </p>
+                                </div>
+                            </article>
 
                             <article className="seo-content" style={{background: 'rgba(10, 47, 53, 0.4)', borderColor: 'rgba(0, 255, 163, 0.2)'}}>
                                 <h2>🔬 Metodologia e Fonte de Dados</h2>
@@ -1497,28 +1816,14 @@
                                 </p>
                             </article>
 
-                            <div className="ad-container ad-bottom">
-                                <ins className="adsbygoogle"
-                                     style={{display: 'block'}}
-                                     data-ad-client="ca-pub-6584010580751654"
-                                     data-ad-slot="INSIRA_SEU_SLOT_AQUI"
-                                     data-ad-format="auto"
-                                     data-full-width-responsive="true"></ins>
-                            </div>
+                            {/* Ezoic injetará anúncios automaticamente aqui */}
                         </div>
 
-                        <aside className="ad-sidebar">
-                            <ins className="adsbygoogle"
-                                 style={{display: 'block'}}
-                                 data-ad-client="ca-pub-6584010580751654"
-                                 data-ad-slot="INSIRA_SEU_SLOT_AQUI"
-                                 data-ad-format="auto"
-                                 data-full-width-responsive="true"></ins>
-                        </aside>
+                        {/* Ezoic injetará anúncios automaticamente aqui */}
                     </div>
 
                     <footer>
-                        <p>© 2026 Conversor Cambial - Todos os direitos reservados</p>
+                        <p>© 2025 Câmbio Free - Todos os direitos reservados</p>
                         <p>
                             <a href="privacy-policy.html">Política de Privacidade</a> | 
                             <a href="termos-de-uso.html"> Termos de Uso</a>
@@ -1558,6 +1863,25 @@
                 mobileToggle.classList.remove('active');
                 navMenu.classList.remove('active');
             }
+        });
+
+        // Smooth scroll para âncoras
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    // Fechar menu mobile após clicar
+                    if (window.innerWidth <= 768) {
+                        mobileToggle.classList.remove('active');
+                        navMenu.classList.remove('active');
+                    }
+                }
+            });
         });
     </script>
 </body>
