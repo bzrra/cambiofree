@@ -907,6 +907,15 @@
                 setStartDate(thirtyDaysAgo.toISOString().split('T')[0]);
             }, []);
 
+            useEffect(() => {
+                // Inicializa os anúncios do AdSense
+                try {
+                    (window.adsbygoogle = window.adsbygoogle || []).push({});
+                } catch (e) {
+                    console.error('AdSense error:', e);
+                }
+            }, [results]);
+
             const swapCurrencies = () => {
                 setFromCurrency(toCurrency);
                 setToCurrency(fromCurrency);
@@ -1249,9 +1258,12 @@
                     </header>
 
                     <div className="ad-container ad-top">
-                        <div className="ad-placeholder">
-                            📢 Espaço para Anúncio (728x90)
-                        </div>
+                        <ins className="adsbygoogle"
+                             style={{display: 'block'}}
+                             data-ad-client="ca-pub-6584010580751654"
+                             data-ad-slot="INSIRA_SEU_SLOT_AQUI"
+                             data-ad-format="auto"
+                             data-full-width-responsive="true"></ins>
                     </div>
 
                     <div className="main-content-wrapper">
@@ -1429,9 +1441,12 @@
                             </div>
 
                             <div className="ad-container ad-middle">
-                                <div className="ad-placeholder">
-                                    📢 Espaço para Anúncio (Responsivo)
-                                </div>
+                                <ins className="adsbygoogle"
+                                     style={{display: 'block'}}
+                                     data-ad-client="ca-pub-6584010580751654"
+                                     data-ad-slot="INSIRA_SEU_SLOT_AQUI"
+                                     data-ad-format="auto"
+                                     data-full-width-responsive="true"></ins>
                             </div>
 
                             <article className="seo-content" style={{background: 'rgba(10, 47, 53, 0.4)', borderColor: 'rgba(0, 255, 163, 0.2)'}}>
@@ -1483,16 +1498,22 @@
                             </article>
 
                             <div className="ad-container ad-bottom">
-                                <div className="ad-placeholder">
-                                    📢 Espaço para Anúncio (728x90)
-                                </div>
+                                <ins className="adsbygoogle"
+                                     style={{display: 'block'}}
+                                     data-ad-client="ca-pub-6584010580751654"
+                                     data-ad-slot="INSIRA_SEU_SLOT_AQUI"
+                                     data-ad-format="auto"
+                                     data-full-width-responsive="true"></ins>
                             </div>
                         </div>
 
                         <aside className="ad-sidebar">
-                            <div className="ad-placeholder">
-                                📢 Anúncio Vertical<br/>(300x600)
-                            </div>
+                            <ins className="adsbygoogle"
+                                 style={{display: 'block'}}
+                                 data-ad-client="ca-pub-6584010580751654"
+                                 data-ad-slot="INSIRA_SEU_SLOT_AQUI"
+                                 data-ad-format="auto"
+                                 data-full-width-responsive="true"></ins>
                         </aside>
                     </div>
 
