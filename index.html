@@ -6,7 +6,6 @@
     <title>Conversor Cambial - Média Histórica</title>
     <meta name="description" content="Calcule a média histórica de conversão entre moedas em qualquer período desde 1999. Visualize gráficos e tendências.">
     
-    <!-- ⚠️ ADICIONE SEU CÓDIGO ADSENSE AQUI APÓS APROVAÇÃO --!>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6584010580751654" crossorigin="anonymous"></script>
     
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
@@ -55,7 +54,6 @@
             z-index: 0;
         }
 
-        /* ==== NAVEGAÇÃO PROFISSIONAL ==== */
         .navbar {
             position: sticky;
             top: 0;
@@ -251,7 +249,6 @@
             text-transform: uppercase;
         }
 
-        /* Estilos para Espaços de Anúncios */
         .ad-container {
             margin: 30px auto;
             padding: 20px;
@@ -798,7 +795,6 @@
             }
         }
 
-        /* ==== FOOTER ==== */
         footer {
             text-align: center;
             padding: 40px 20px;
@@ -820,16 +816,13 @@
     </style>
 </head>
 <body>
-    <!-- NAVEGAÇÃO PROFISSIONAL -->
     <nav class="navbar">
         <div class="nav-container">
-            <!-- Logo -->
             <a href="index.html" class="nav-logo">
                 <span class="logo-icon">💱</span>
                 <span>Câmbio Free</span>
             </a>
 
-            <!-- Menu Principal -->
             <ul class="nav-menu" id="navMenu">
                 <li class="nav-item">
                     <a class="nav-link">
@@ -845,7 +838,6 @@
                 </li>
             </ul>
 
-            <!-- Toggle Mobile -->
             <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
                 <span></span>
                 <span></span>
@@ -907,7 +899,6 @@
             const chartInstance = useRef(null);
 
             useEffect(() => {
-                // Set default dates (last 30 days)
                 const today = new Date();
                 const thirtyDaysAgo = new Date(today);
                 thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
@@ -955,8 +946,6 @@
                 setResults(null);
 
                 try {
-                    // Using Frankfurter API for historical data (supports EUR base and others)
-                    // Need to convert if not EUR-based
                     const response = await fetch(
                         `https://api.frankfurter.app/${startDate}..${endDate}?from=${fromCurrency}&to=${toCurrency}`
                     );
@@ -974,7 +963,6 @@
                     const rates = [];
                     const dataPoints = [];
 
-                    // Process the rates
                     Object.entries(data.rates).forEach(([date, rateObj]) => {
                         if (rateObj[toCurrency]) {
                             const rate = rateObj[toCurrency];
@@ -987,10 +975,8 @@
                         throw new Error('Não foi possível obter dados para este período');
                     }
 
-                    // Sort by date
                     dataPoints.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-                    // Calculate statistics
                     const average = rates.reduce((sum, rate) => sum + rate, 0) / rates.length;
                     const min = Math.min(...rates);
                     const max = Math.max(...rates);
@@ -1006,7 +992,6 @@
                         totalDays: rates.length
                     });
 
-                    // Create chart
                     setTimeout(() => createChart(dataPoints), 100);
 
                 } catch (err) {
@@ -1020,7 +1005,6 @@
             const createChart = (dataPoints) => {
                 if (!chartRef.current) return;
 
-                // Destroy previous chart if exists
                 if (chartInstance.current) {
                     chartInstance.current.destroy();
                 }
@@ -1127,13 +1111,11 @@
                     return;
                 }
 
-                // Preparar os dados básicos
                 const basicData = results.dataPoints.map(point => ({
                     'Data': point.date,
                     [`Taxa (${fromCurrency}/${toCurrency})`]: parseFloat(point.rate.toFixed(4)),
                 }));
 
-                // Dados de resumo
                 const summaryData = [
                     { 'Data': '', [`Taxa (${fromCurrency}/${toCurrency})`]: '' },
                     { 'Data': 'RESUMO ESTATÍSTICO', [`Taxa (${fromCurrency}/${toCurrency})`]: '' },
@@ -1146,18 +1128,15 @@
                 ];
 
                 const excelData = [...basicData, ...summaryData];
-
                 let fileName = `Cambio_${fromCurrency}_${toCurrency}_${startDate}_${endDate}`;
 
                 if (dataFormat === 'xlsx') {
-                    // Excel format
                     const ws = XLSX.utils.json_to_sheet(excelData);
                     const wb = XLSX.utils.book_new();
                     XLSX.utils.book_append_sheet(wb, ws, 'Taxas de Câmbio');
                     ws['!cols'] = [{ wch: 15 }, { wch: 20 }];
                     XLSX.writeFile(wb, fileName + '.xlsx');
                 } else if (dataFormat === 'csv') {
-                    // CSV format
                     const ws = XLSX.utils.json_to_sheet(excelData);
                     const csv = XLSX.utils.sheet_to_csv(ws);
                     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -1166,7 +1145,6 @@
                     link.download = fileName + '.csv';
                     link.click();
                 } else if (dataFormat === 'json') {
-                    // JSON format
                     const jsonData = {
                         metadata: {
                             from: fromCurrency,
@@ -1193,7 +1171,6 @@
                     link.download = fileName + '.json';
                     link.click();
                 } else if (dataFormat === 'txt') {
-                    // TXT format (tab-delimited)
                     let txtContent = `TAXAS DE CÂMBIO - ${fromCurrency} para ${toCurrency}\n`;
                     txtContent += `Período: ${startDate} até ${endDate}\n`;
                     txtContent += `Total de dias úteis: ${results.totalDays}\n\n`;
@@ -1233,20 +1210,15 @@
                     return;
                 }
 
-                // Criar canvas temporário com fundo branco
                 const tempCanvas = document.createElement('canvas');
                 tempCanvas.width = canvas.width;
                 tempCanvas.height = canvas.height;
                 const tempCtx = tempCanvas.getContext('2d');
 
-                // Preencher com fundo branco
                 tempCtx.fillStyle = '#FFFFFF';
                 tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
-
-                // Desenhar o gráfico original por cima
                 tempCtx.drawImage(canvas, 0, 0);
 
-                // Configurar formato de exportação
                 let mimeType, extension;
                 if (imageFormat === 'png') {
                     mimeType = 'image/png';
@@ -1259,10 +1231,8 @@
                     extension = 'webp';
                 }
 
-                // Converter para imagem com qualidade 95%
                 const url = tempCanvas.toDataURL(mimeType, 0.95);
                 
-                // Criar link de download
                 const link = document.createElement('a');
                 link.href = url;
                 link.download = `${fileName}.${extension}`;
@@ -1277,11 +1247,9 @@
                         <h1>Média Histórica Cambial</h1>
                         <div className="subtitle">Calcule a Média Histórica de Taxas</div>
                     </header>
-                    {/* 🎯 ESPAÇO PARA ANÚNCIO TOPO */}
+
                     <div className="ad-container ad-top">
                         <div className="ad-placeholder">
-                            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6584010580751654" crossorigin="anonymous"></script>
-                            {/* Tamanho recomendado: 728x90 ou Responsivo */}
                             📢 Espaço para Anúncio (728x90)
                         </div>
                     </div>
@@ -1460,30 +1428,23 @@
                                 )}
                             </div>
 
-                            {/* 🎯 ESPAÇO PARA ANÚNCIO MEIO */}
                             <div className="ad-container ad-middle">
                                 <div className="ad-placeholder">
-                                    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6584010580751654" crossorigin="anonymous"></script>
-                                    {/* Tamanho recomendado: Responsivo */}
                                     📢 Espaço para Anúncio (Responsivo)
                                 </div>
                             </div>
 
-                            {/* 📊 SEÇÃO DE METODOLOGIA */}
                             <article className="seo-content" style={{background: 'rgba(10, 47, 53, 0.4)', borderColor: 'rgba(0, 255, 163, 0.2)'}}>
                                 <h2>🔬 Metodologia e Fonte de Dados</h2>
                                 
                                 <h3>📡 Fonte Oficial: Banco Central Europeu (ECB)</h3>
                                 <p>
-                                    Nossa ferramenta de média histórica utiliza exclusivamente dados do <strong>Banco Central Europeu (ECB) </strong> 
-                                    através da API Frankfurter. O ECB publica diariamente taxas de câmbio de referência que são 
-                                    utilizadas por instituições financeiras, governos e organizações internacionais.
+                                    Nossa ferramenta de média histórica utiliza exclusivamente dados do <strong>Banco Central Europeu (ECB)</strong> através da API Frankfurter. O ECB publica diariamente taxas de câmbio de referência que são utilizadas por instituições financeiras, governos e organizações internacionais.
                                 </p>
 
                                 <h3>📊 Cálculo da Média Histórica</h3>
                                 <p>
-                                    A média histórica é calculada utilizando apenas <strong>dias úteis</strong> (dias em que o 
-                                    mercado cambial operou). O cálculo segue este processo:
+                                    A média histórica é calculada utilizando apenas <strong>dias úteis</strong> (dias em que o mercado cambial operou). O cálculo segue este processo:
                                 </p>
                                 <ul>
                                     <li><strong>Coleta:</strong> Obtém todas as taxas de dias úteis no período selecionado</li>
@@ -1511,9 +1472,7 @@
                                     <li>✅ Comparar períodos históricos diferentes</li>
                                 </ul>
                                 <p style={{marginTop: '15px', padding: '15px', background: 'rgba(212, 175, 55, 0.1)', borderLeft: '4px solid var(--secondary)', borderRadius: '4px'}}>
-                                    <strong>⚠️ Nota Importante:</strong> Médias históricas não preveem comportamento futuro. 
-                                    Use-as como referência informativa, não como base única para decisões de investimento 
-                                    ou hedge cambial.
+                                    <strong>⚠️ Nota Importante:</strong> Médias históricas não preveem comportamento futuro. Use-as como referência informativa, não como base única para decisões de investimento ou hedge cambial.
                                 </p>
 
                                 <p style={{marginTop: '20px', fontSize: '0.9rem', color: 'var(--text-muted)'}}>
@@ -1523,21 +1482,15 @@
                                 </p>
                             </article>
 
-                            {/* 🎯 ESPAÇO PARA ANÚNCIO RODAPÉ */}
                             <div className="ad-container ad-bottom">
                                 <div className="ad-placeholder">
-                                    {/* 📍 COLE AQUI O CÓDIGO DO GOOGLE ADSENSE */}
-                                    {/* Tamanho recomendado: 728x90 ou Responsivo */}
                                     📢 Espaço para Anúncio (728x90)
                                 </div>
                             </div>
                         </div>
 
-                        {/* 🎯 ESPAÇO PARA ANÚNCIO SIDEBAR (apenas desktop) */}
                         <aside className="ad-sidebar">
                             <div className="ad-placeholder">
-                                {/* 📍 COLE AQUI O CÓDIGO DO GOOGLE ADSENSE */}
-                                {/* Tamanho recomendado: 300x600 ou 160x600 */}
                                 📢 Anúncio Vertical<br/>(300x600)
                             </div>
                         </aside>
@@ -1561,7 +1514,6 @@
         ReactDOM.render(<HistoricalConverter />, document.getElementById('root'));
     </script>
 
-    <!-- JAVASCRIPT PARA MENU MOBILE -->
     <script>
         const mobileToggle = document.getElementById('mobileToggle');
         const navMenu = document.getElementById('navMenu');
@@ -1571,7 +1523,6 @@
             navMenu.classList.toggle('active');
         });
 
-        // Fecha o menu ao clicar em um link (mobile)
         document.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', () => {
                 if (window.innerWidth <= 768) {
@@ -1581,7 +1532,6 @@
             });
         });
 
-        // Fecha o menu ao redimensionar para desktop
         window.addEventListener('resize', () => {
             if (window.innerWidth > 768) {
                 mobileToggle.classList.remove('active');
