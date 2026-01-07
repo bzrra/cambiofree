@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Política de Privacidade - Câmbio Free</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Playfair+Display:wght@600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -12,52 +12,138 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --primary: #2c3e50;
+            --secondary: #546e7a;
+            --accent: #5c7cfa;
+            --background: #f8f9fa;
+            --surface: #ffffff;
+            --border: #dee2e6;
+            --text: #212529;
+            --text-muted: #6c757d;
+            --hover: #e9ecef;
+        }
+
+        [data-theme="dark"] {
+            --primary: #e9ecef;
+            --secondary: #adb5bd;
+            --accent: #748ffc;
+            --background: #1a1a1a;
+            --surface: #2d2d2d;
+            --border: #404040;
+            --text: #e9ecef;
+            --text-muted: #adb5bd;
+            --hover: #3d3d3d;
+        }
+
         body {
-            font-family: 'Space Mono', monospace;
-            background: linear-gradient(135deg, #0D1B2A 0%, #0A2F35 100%);
-            color: #E0E1DD;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--background);
+            color: var(--text);
             line-height: 1.6;
             padding: 40px 20px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .header-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 20px;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .logo-link {
+            text-decoration: none;
+            color: var(--text);
+            font-size: 1.25rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: color 0.3s ease;
+        }
+
+        .logo-link:hover {
+            color: var(--accent);
+        }
+
+        .theme-toggle {
+            background: var(--hover);
+            border: 1px solid var(--border);
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            transition: all 0.2s;
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+            transform: scale(1.05);
         }
 
         .container {
             max-width: 900px;
-            margin: 0 auto;
-            background: rgba(27, 38, 59, 0.6);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            border-radius: 24px;
+            margin: 80px auto 0;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
             padding: 50px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
         h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 3rem;
-            background: linear-gradient(135deg, #D4AF37 0%, #00FFA3 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+            transition: color 0.3s ease;
+        }
+
+        .last-updated {
+            color: var(--text-muted);
+            font-size: 0.9rem;
             margin-bottom: 30px;
+            transition: color 0.3s ease;
         }
 
         h2 {
-            font-family: 'Playfair Display', serif;
-            color: #D4AF37;
-            font-size: 1.8rem;
+            color: var(--primary);
+            font-size: 1.5rem;
+            font-weight: 600;
             margin-top: 40px;
             margin-bottom: 15px;
+            transition: color 0.3s ease;
         }
 
         h3 {
-            color: #00FFA3;
-            font-size: 1.3rem;
+            color: var(--secondary);
+            font-size: 1.2rem;
+            font-weight: 600;
             margin-top: 25px;
             margin-bottom: 10px;
+            transition: color 0.3s ease;
         }
 
         p {
             margin-bottom: 15px;
-            color: #E0E1DD;
+            color: var(--text);
+            line-height: 1.7;
+            transition: color 0.3s ease;
         }
 
         ul {
@@ -67,44 +153,88 @@
 
         li {
             margin-bottom: 8px;
+            color: var(--text);
+            line-height: 1.6;
+            transition: color 0.3s ease;
         }
 
         a {
-            color: #00FFA3;
+            color: var(--accent);
             text-decoration: none;
-            transition: color 0.3s;
+            transition: all 0.2s;
         }
 
         a:hover {
-            color: #D4AF37;
-        }
-
-        .last-updated {
-            color: #778DA9;
-            font-size: 0.9rem;
-            margin-bottom: 30px;
+            text-decoration: underline;
         }
 
         .back-link {
             display: inline-block;
             margin-top: 40px;
             padding: 12px 24px;
-            background: linear-gradient(135deg, #D4AF37 0%, #00FFA3 100%);
-            color: #0D1B2A;
+            background: var(--accent);
+            color: white;
             border-radius: 8px;
-            font-weight: 700;
-            transition: transform 0.3s;
+            font-weight: 600;
+            transition: all 0.2s;
+            text-decoration: none;
         }
 
         .back-link:hover {
-            transform: translateY(-2px);
+            background: #4c6ef5;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(92, 124, 250, 0.3);
+            text-decoration: none;
+        }
+
+        .highlight-box {
+            background: var(--background);
+            border-left: 4px solid var(--accent);
+            border-radius: 6px;
+            padding: 20px;
+            margin: 20px 0;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        strong {
+            color: var(--primary);
+            transition: color 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 25px;
+                margin-top: 70px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.3rem;
+            }
+
+            h3 {
+                font-size: 1.1rem;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="header-bar">
+        <a href="index.html" class="logo-link">
+            <span>💱</span>
+            <span>Câmbio Free</span>
+        </a>
+        <button class="theme-toggle" id="themeToggle" aria-label="Alternar tema">
+            <span id="themeIcon">🌙</span>
+        </button>
+    </div>
+
     <div class="container">
         <h1>Política de Privacidade</h1>
-        <p class="last-updated">Última atualização: Dezembro de 2024</p>
+        <p class="last-updated">Última atualização: Janeiro de 2026</p>
 
         <h2>1. Introdução</h2>
         <p>
@@ -115,7 +245,7 @@
         
         <h3>2.1 Informações Fornecidas Voluntariamente</h3>
         <p>
-            Nosso site não requer cadastro ou login. As conversões cambiais são realizadas localmente no seu navegador usando APIs públicas. Não armazenamos:
+            Nosso site não requer cadastro ou login. As conversões cambiais são realizadas localmente no seu navegador usando APIs públicas. <strong>Não armazenamos:</strong>
         </p>
         <ul>
             <li>Dados pessoais (nome, e-mail, telefone)</li>
@@ -124,146 +254,233 @@
             <li>Informações financeiras</li>
         </ul>
 
+        <div class="highlight-box">
+            <strong>Privacidade em Primeiro Lugar:</strong> Todas as conversões e cálculos são processados diretamente no seu navegador. Nenhum dado é enviado para nossos servidores.
+        </div>
+
         <h3>2.2 Informações Coletadas Automaticamente</h3>
         <p>
-            Quando você visita nosso site, podemos coletar automaticamente:
+            Quando você visita nosso site, podemos coletar automaticamente informações anônimas para análise estatística:
         </p>
         <ul>
-            <li>Endereço IP</li>
-            <li>Tipo de navegador</li>
+            <li>Endereço IP (anonimizado)</li>
+            <li>Tipo de navegador e dispositivo</li>
             <li>Páginas visitadas</li>
             <li>Tempo de permanência no site</li>
-            <li>Referências de origem</li>
+            <li>Origem de referência (site de origem)</li>
         </ul>
 
-        <h2>3. Google AdSense e Publicidade</h2>
+        <h2>3. Publicidade e Monetização</h2>
         
-        <h3>3.1 Uso do Google AdSense</h3>
+        <h3>3.1 Uso de Plataformas de Anúncios</h3>
         <p>
-            Este site utiliza o Google AdSense para exibir anúncios. O Google e seus parceiros usam cookies para personalizar anúncios com base em visitas anteriores ao nosso site e a outros sites na internet.
+            Este site utiliza plataformas de publicidade para exibir anúncios relevantes. Essas plataformas e seus parceiros podem usar cookies e tecnologias similares para:
         </p>
+        <ul>
+            <li>Personalizar anúncios com base em seus interesses</li>
+            <li>Medir a eficácia dos anúncios</li>
+            <li>Coletar dados demográficos agregados</li>
+            <li>Melhorar a experiência publicitária</li>
+        </ul>
 
         <h3>3.2 Cookies de Terceiros</h3>
         <p>
-            O Google usa cookies para:
+            As plataformas de publicidade usam cookies para fornecer anúncios mais relevantes. Esses cookies podem rastrear sua navegação em diferentes sites.
+        </p>
+
+        <h3>3.3 Desativar Personalização de Anúncios</h3>
+        <p>
+            Você pode controlar ou desativar a personalização de anúncios através de:
         </p>
         <ul>
-            <li>Exibir anúncios relevantes aos usuários</li>
-            <li>Medir a eficácia dos anúncios</li>
-            <li>Coletar dados demográficos e de interesse</li>
+            <li><a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer">Configurações de Anúncios do Google</a></li>
+            <li><a href="https://optout.aboutads.info/" target="_blank" rel="noopener noreferrer">Digital Advertising Alliance</a></li>
+            <li><a href="https://www.youronlinechoices.com/" target="_blank" rel="noopener noreferrer">Your Online Choices (Europa)</a></li>
+            <li>Configurações do seu navegador (bloqueio de cookies de terceiros)</li>
         </ul>
-
-        <h3>3.3 Opt-Out (Desativar Personalização)</h3>
-        <p>
-            Você pode desativar a personalização de anúncios visitando as <a href="https://www.google.com/settings/ads" target="_blank">Configurações de Anúncios do Google</a> ou usando a extensão de navegador para desativação do Google Analytics disponível em <a href="https://tools.google.com/dlpage/gaoptout" target="_blank">tools.google.com/dlpage/gaoptout</a>.
-        </p>
 
         <h2>4. Uso de Cookies</h2>
         <p>
-            Nosso site e nossos parceiros de publicidade usam cookies para:
+            Nosso site utiliza cookies para melhorar sua experiência. Os cookies são pequenos arquivos de texto armazenados em seu dispositivo que nos ajudam a:
         </p>
         <ul>
-            <li>Melhorar a experiência do usuário</li>
+            <li>Lembrar suas preferências (como tema escuro/claro)</li>
             <li>Analisar o tráfego do site</li>
-            <li>Personalizar anúncios</li>
-            <li>Lembrar preferências do usuário</li>
+            <li>Melhorar a funcionalidade do site</li>
+            <li>Personalizar conteúdo e anúncios</li>
         </ul>
-        <p>
-            Você pode configurar seu navegador para recusar cookies, mas isso pode afetar o funcionamento do site.
-        </p>
+        
+        <div class="highlight-box">
+            <strong>Controle de Cookies:</strong> Você pode configurar seu navegador para recusar todos os cookies ou alertá-lo quando um cookie estiver sendo enviado. No entanto, algumas funcionalidades do site podem não funcionar adequadamente sem cookies.
+        </div>
 
         <h2>5. APIs de Terceiros</h2>
         <p>
-            Nosso site utiliza as seguintes APIs públicas para obter taxas de câmbio:
+            Nosso site utiliza a seguinte API pública para obter taxas de câmbio:
         </p>
         <ul>
-            <li><strong>ExchangeRate-API</strong>: Para taxas em tempo real</li>
-            <li><strong>Frankfurter API</strong>: Para dados históricos desde 1999</li>
+            <li><strong>Frankfurter API</strong> (api.frankfurter.app): Para dados históricos e taxas atuais baseadas nas publicações do Banco Central Europeu (ECB)</li>
         </ul>
         <p>
-            Essas APIs não coletam ou armazenam informações pessoais dos usuários. Consulte as políticas de privacidade de cada API:
+            Esta API não coleta ou armazena informações pessoais dos usuários. As requisições são feitas diretamente do seu navegador, sem intermediação por nossos servidores. Para mais informações, consulte a <a href="https://www.frankfurter.app/" target="_blank" rel="noopener noreferrer">documentação da Frankfurter API</a>.
         </p>
-        <ul>
-            <li><a href="https://www.exchangerate-api.com/privacy" target="_blank">ExchangeRate-API Privacy Policy</a></li>
-            <li><a href="https://www.frankfurter.app/" target="_blank">Frankfurter API</a></li>
-        </ul>
 
-        <h2>6. Google Analytics</h2>
+        <h2>6. Análise de Tráfego</h2>
         <p>
-            Utilizamos o Google Analytics para analisar o uso do nosso site. O Google Analytics usa cookies para coletar informações anônimas, incluindo:
+            Podemos utilizar serviços de análise web (como Google Analytics) para entender como os visitantes interagem com nosso site. Esses serviços coletam informações anônimas, incluindo:
         </p>
         <ul>
-            <li>Número de visitantes</li>
+            <li>Número de visitantes únicos</li>
             <li>Páginas mais acessadas</li>
-            <li>Tempo de permanência</li>
-            <li>Origem do tráfego</li>
+            <li>Tempo médio de permanência</li>
+            <li>Taxa de rejeição</li>
+            <li>Origem geográfica do tráfego (país/cidade)</li>
+            <li>Dispositivos e navegadores utilizados</li>
         </ul>
         <p>
-            Para mais informações, consulte a <a href="https://policies.google.com/privacy" target="_blank">Política de Privacidade do Google</a>.
+            Essas informações são agregadas e anonimizadas, não identificando usuários individuais.
         </p>
 
         <h2>7. Compartilhamento de Informações</h2>
         <p>
-            Não vendemos, alugamos ou compartilhamos suas informações pessoais com terceiros, exceto:
+            <strong>Não vendemos, alugamos ou compartilhamos suas informações pessoais</strong> com terceiros para fins comerciais. Podemos compartilhar informações apenas nas seguintes circunstâncias:
         </p>
         <ul>
-            <li>Quando exigido por lei</li>
-            <li>Para proteger nossos direitos legais</li>
-            <li>Com prestadores de serviços (Google AdSense, Google Analytics)</li>
+            <li><strong>Requisitos Legais:</strong> Quando exigido por lei, ordem judicial ou processo legal</li>
+            <li><strong>Proteção de Direitos:</strong> Para proteger nossos direitos, propriedade ou segurança</li>
+            <li><strong>Prestadores de Serviços:</strong> Com parceiros técnicos (hospedagem, análise, publicidade) sob acordos de confidencialidade</li>
+            <li><strong>Consentimento:</strong> Com seu consentimento explícito para outros fins</li>
         </ul>
 
         <h2>8. Segurança dos Dados</h2>
         <p>
-            Implementamos medidas de segurança para proteger suas informações, incluindo:
+            Implementamos medidas de segurança técnicas e organizacionais para proteger suas informações:
         </p>
         <ul>
-            <li>Conexão HTTPS criptografada</li>
-            <li>Não armazenamento de dados sensíveis</li>
-            <li>Acesso limitado a informações</li>
+            <li><strong>HTTPS:</strong> Conexão criptografada em todas as páginas</li>
+            <li><strong>Minimização de Dados:</strong> Coletamos apenas o mínimo necessário</li>
+            <li><strong>Processamento Local:</strong> Conversões e cálculos ocorrem no seu navegador</li>
+            <li><strong>Sem Armazenamento Sensível:</strong> Não armazenamos dados financeiros ou pessoais sensíveis</li>
+            <li><strong>Acesso Restrito:</strong> Acesso limitado a sistemas e informações</li>
         </ul>
+        <p>
+            Apesar de nossos esforços, nenhum sistema é 100% seguro. Não podemos garantir segurança absoluta contra todas as ameaças.
+        </p>
 
         <h2>9. Privacidade de Crianças</h2>
         <p>
-            Nosso site não é direcionado a menores de 13 anos. Não coletamos intencionalmente informações de crianças. Se você acredita que uma criança forneceu informações, entre em contato conosco.
+            Nosso site não é direcionado a menores de 13 anos. Não coletamos intencionalmente informações pessoais de crianças. Se você é pai/mãe ou responsável e acredita que seu filho forneceu informações pessoais, entre em contato conosco para que possamos tomar as medidas apropriadas.
         </p>
 
-        <h2>10. Seus Direitos (LGPD)</h2>
+        <h2>10. Seus Direitos (LGPD e GDPR)</h2>
         <p>
-            De acordo com a Lei Geral de Proteção de Dados (LGPD), você tem direito a:
+            De acordo com a Lei Geral de Proteção de Dados (LGPD) no Brasil e o Regulamento Geral de Proteção de Dados (GDPR) na União Europeia, você tem os seguintes direitos:
         </p>
         <ul>
-            <li>Confirmar a existência de tratamento de dados</li>
-            <li>Acessar seus dados</li>
-            <li>Corrigir dados incompletos ou desatualizados</li>
-            <li>Solicitar anonimização ou exclusão de dados</li>
-            <li>Revogar consentimento</li>
+            <li><strong>Acesso:</strong> Confirmar quais dados pessoais processamos sobre você</li>
+            <li><strong>Retificação:</strong> Corrigir dados incompletos, inexatos ou desatualizados</li>
+            <li><strong>Exclusão:</strong> Solicitar a eliminação de seus dados pessoais</li>
+            <li><strong>Portabilidade:</strong> Receber seus dados em formato estruturado e legível</li>
+            <li><strong>Oposição:</strong> Opor-se ao processamento de seus dados</li>
+            <li><strong>Revogação:</strong> Revogar consentimento a qualquer momento</li>
+            <li><strong>Informação:</strong> Ser informado sobre compartilhamento de dados</li>
+            <li><strong>Anonimização:</strong> Solicitar a anonimização de dados</li>
         </ul>
+        <p>
+            Para exercer qualquer um desses direitos, entre em contato conosco através do e-mail fornecido na seção de contato.
+        </p>
 
         <h2>11. Links Externos</h2>
         <p>
-            Nosso site pode conter links para sites de terceiros. Não somos responsáveis pelas práticas de privacidade desses sites. Recomendamos que você leia as políticas de privacidade de cada site que visitar.
+            Nosso site pode conter links para sites de terceiros (como documentações de APIs, ferramentas de gerenciamento de anúncios, etc.). <strong>Não somos responsáveis</strong> pelas práticas de privacidade ou pelo conteúdo desses sites externos.
+        </p>
+        <p>
+            Recomendamos que você leia as políticas de privacidade de cada site que visitar, pois elas podem diferir significativamente da nossa.
         </p>
 
-        <h2>12. Alterações nesta Política</h2>
+        <h2>12. Transferência Internacional de Dados</h2>
         <p>
-            Podemos atualizar esta Política de Privacidade periodicamente. A data da última atualização será sempre indicada no topo desta página. Recomendamos que você revise esta política regularmente.
+            Alguns dos serviços que utilizamos (como plataformas de publicidade e análise) podem processar dados em servidores localizados fora do Brasil. Nesses casos, garantimos que existam salvaguardas adequadas para proteger suas informações conforme exigido pela LGPD.
         </p>
 
-        <h2>13. Contato</h2>
+        <h2>13. Retenção de Dados</h2>
         <p>
-            Se você tiver dúvidas sobre esta Política de Privacidade ou sobre o tratamento de seus dados, entre em contato conosco através de:
+            Como não coletamos ou armazenamos dados pessoais identificáveis no nosso site, não há período de retenção de dados pessoais. Dados analíticos agregados e anônimos podem ser retidos indefinidamente para fins estatísticos.
+        </p>
+
+        <h2>14. Alterações nesta Política</h2>
+        <p>
+            Podemos atualizar esta Política de Privacidade periodicamente para refletir mudanças em nossas práticas, tecnologias, requisitos legais ou outros fatores. A data da última atualização será sempre indicada no topo desta página.
+        </p>
+        <p>
+            Alterações significativas serão destacadas de forma proeminente no site. Recomendamos que você revise esta política regularmente para se manter informado sobre como protegemos suas informações.
+        </p>
+
+        <h2>15. Contato e Encarregado de Dados</h2>
+        <p>
+            Se você tiver dúvidas, preocupações ou solicitações relacionadas a esta Política de Privacidade ou ao tratamento de seus dados pessoais, entre em contato conosco:
         </p>
         <ul>
-            <li>E-mail: cambiofree_2025@gmail.com</li>
+            <li><strong>E-mail:</strong> <a href="mailto:cambiofree2025@gmail.com">cambiofree2025@gmail.com</a></li>
+            <li><strong>Resposta:</strong> Responderemos sua solicitação em até 15 dias úteis</li>
         </ul>
 
-        <h2>14. Consentimento</h2>
+        <h2>16. Consentimento</h2>
         <p>
-            Ao utilizar nosso site, você consente com os termos desta Política de Privacidade e com o uso de cookies conforme descrito.
+            Ao utilizar nosso site, você reconhece que leu, entendeu e concorda com os termos desta Política de Privacidade, incluindo:
+        </p>
+        <ul>
+            <li>Coleta de informações conforme descrito</li>
+            <li>Uso de cookies e tecnologias similares</li>
+            <li>Exibição de anúncios personalizados</li>
+            <li>Compartilhamento de dados com prestadores de serviços</li>
+        </ul>
+        <p>
+            Você pode retirar seu consentimento a qualquer momento, embora isso possa afetar sua capacidade de usar certas funcionalidades do site.
+        </p>
+
+        <h2>17. Jurisdição e Lei Aplicável</h2>
+        <p>
+            Esta Política de Privacidade é regida e interpretada de acordo com as leis brasileiras, em particular a Lei nº 13.709/2018 (Lei Geral de Proteção de Dados - LGPD). Qualquer disputa relacionada a esta política será submetida à jurisdição exclusiva dos tribunais brasileiros.
         </p>
 
         <a href="index.html" class="back-link">← Voltar ao Conversor</a>
-        <span id="ezoic-privacy-policy-embed"></span>
+        
+        <div style="margin-top: 40px; padding-top: 30px; border-top: 1px solid var(--border);">
+            <p style="color: var(--text-muted); font-size: 0.85rem; text-align: center;">
+                Câmbio Free - Ferramenta gratuita de conversão e análise cambial<br>
+                © 2025 - Todos os direitos reservados
+            </p>
+        </div>
     </div>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const htmlElement = document.documentElement;
+
+        // Verifica preferência salva ou preferência do sistema
+        const savedTheme = localStorage.getItem('theme');
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const initialTheme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+
+        // Aplica tema inicial
+        if (initialTheme === 'dark') {
+            htmlElement.setAttribute('data-theme', 'dark');
+            themeIcon.textContent = '☀️';
+        }
+
+        // Toggle de tema
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            htmlElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            themeIcon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+        });
+    </script>
 </body>
 </html>
