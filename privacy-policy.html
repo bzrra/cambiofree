@@ -245,17 +245,26 @@
         
         <h3>2.1 Informações Fornecidas Voluntariamente</h3>
         <p>
-            Nosso site não requer cadastro ou login. As conversões cambiais são realizadas localmente no seu navegador usando APIs públicas. <strong>Não armazenamos:</strong>
+            Nosso site não requer cadastro ou login. As conversões cambiais são realizadas localmente no seu navegador usando APIs públicas. <strong>Não armazenamos em nossos servidores:</strong>
         </p>
         <ul>
             <li>Dados pessoais (nome, e-mail, telefone)</li>
-            <li>Valores convertidos</li>
-            <li>Histórico de conversões</li>
-            <li>Informações financeiras</li>
+            <li>Valores convertidos ou consultados</li>
+            <li>Histórico de conversões ou consultas</li>
+            <li>Informações financeiras pessoais</li>
+        </ul>
+        
+        <p>
+            <strong>Armazenamento Local (no seu dispositivo):</strong> Para melhorar o desempenho, armazenamos localmente no seu navegador:
+        </p>
+        <ul>
+            <li>Cotações de câmbio já consultadas (apenas números e datas)</li>
+            <li>Médias calculadas de períodos anteriores</li>
+            <li>Sua preferência de tema (claro/escuro)</li>
         </ul>
 
         <div class="highlight-box">
-            <strong>Privacidade em Primeiro Lugar:</strong> Todas as conversões e cálculos são processados diretamente no seu navegador. Nenhum dado é enviado para nossos servidores.
+            <strong>Privacidade em Primeiro Lugar:</strong> Todas as conversões e cálculos são processados diretamente no seu navegador. Nenhum dado pessoal ou histórico de consultas é enviado para nossos servidores. Os dados em cache local ficam exclusivamente no seu dispositivo e podem ser apagados a qualquer momento.
         </div>
 
         <h3>2.2 Informações Coletadas Automaticamente</h3>
@@ -299,19 +308,33 @@
             <li>Configurações do seu navegador (bloqueio de cookies de terceiros)</li>
         </ul>
 
-        <h2>4. Uso de Cookies</h2>
+        <h2>4. Uso de Cookies e Armazenamento Local</h2>
         <p>
-            Nosso site utiliza cookies para melhorar sua experiência. Os cookies são pequenos arquivos de texto armazenados em seu dispositivo que nos ajudam a:
+            Nosso site utiliza cookies e armazenamento local (localStorage) para melhorar sua experiência. Os cookies são pequenos arquivos de texto armazenados em seu dispositivo que nos ajudam a:
         </p>
         <ul>
             <li>Lembrar suas preferências (como tema escuro/claro)</li>
+            <li>Armazenar cotações já consultadas para acesso mais rápido (cache local)</li>
             <li>Analisar o tráfego do site</li>
             <li>Melhorar a funcionalidade do site</li>
             <li>Personalizar conteúdo e anúncios</li>
         </ul>
         
+        <h3>4.1 Armazenamento Local (localStorage)</h3>
+        <p>
+            Utilizamos o localStorage do navegador para armazenar temporariamente:
+        </p>
+        <ul>
+            <li><strong>Preferência de tema:</strong> Sua escolha entre modo claro e escuro</li>
+            <li><strong>Cache de cotações:</strong> Taxas de câmbio já consultadas para reduzir tempo de carregamento e economizar requisições à API</li>
+            <li><strong>Cache de médias:</strong> Médias mensais e anuais calculadas anteriormente</li>
+        </ul>
+        <p>
+            <strong>Importante:</strong> Todos os dados armazenados localmente são apenas técnicos (preferências e cotações numéricas). Não armazenamos nenhuma informação pessoal, financeira sensível ou histórico de suas consultas no localStorage.
+        </p>
+        
         <div class="highlight-box">
-            <strong>Controle de Cookies:</strong> Você pode configurar seu navegador para recusar todos os cookies ou alertá-lo quando um cookie estiver sendo enviado. No entanto, algumas funcionalidades do site podem não funcionar adequadamente sem cookies.
+            <strong>Controle de Cookies e Armazenamento:</strong> Você pode configurar seu navegador para recusar todos os cookies ou alertá-lo quando um cookie estiver sendo enviado. Você também pode limpar o localStorage a qualquer momento nas configurações do navegador. No entanto, algumas funcionalidades do site (como lembrar seu tema preferido ou carregar cotações mais rapidamente) podem não funcionar adequadamente sem esses recursos.
         </div>
 
         <h2>5. APIs de Terceiros</h2>
@@ -319,11 +342,27 @@
             Nosso site utiliza a seguinte API pública para obter taxas de câmbio:
         </p>
         <ul>
-            <li><strong>Frankfurter API</strong> (api.frankfurter.app): Para dados históricos e taxas atuais baseadas nas publicações do Banco Central Europeu (ECB)</li>
+            <li><strong>AwesomeAPI</strong> (economia.awesomeapi.com.br): Para dados históricos e taxas atuais baseadas nas publicações do Banco Central do Brasil e outras fontes financeiras oficiais</li>
         </ul>
         <p>
-            Esta API não coleta ou armazena informações pessoais dos usuários. As requisições são feitas diretamente do seu navegador, sem intermediação por nossos servidores. Para mais informações, consulte a <a href="https://www.frankfurter.app/" target="_blank" rel="noopener noreferrer">documentação da Frankfurter API</a>.
+            Esta API não coleta ou armazena informações pessoais dos usuários. As requisições são feitas diretamente do seu navegador, sem intermediação por nossos servidores. Para mais informações, consulte a <a href="https://docs.awesomeapi.com.br/api-de-moedas" target="_blank" rel="noopener noreferrer">documentação da AwesomeAPI</a>.
         </p>
+        
+        <h3>5.1 Sistema de Cache Local</h3>
+        <p>
+            Para melhorar o desempenho e reduzir requisições desnecessárias à API, implementamos um sistema de cache inteligente que armazena localmente no seu navegador (localStorage) as cotações já consultadas. Este sistema funciona da seguinte forma:
+        </p>
+        <ul>
+            <li><strong>Cache por dia individual:</strong> Cada cotação diária consultada é salva localmente com uma chave única (ex: "daily_USD_2025-01-15")</li>
+            <li><strong>Cache de médias periódicas:</strong> Médias mensais e anuais são armazenadas temporariamente e atualizadas automaticamente quando o período muda</li>
+            <li><strong>Reutilização inteligente:</strong> Quando você consulta um período que já foi parcialmente consultado antes, apenas os dados novos são baixados da API</li>
+            <li><strong>Permanência:</strong> Os dados em cache permanecem no seu navegador até você limpar manualmente o localStorage ou os cookies</li>
+            <li><strong>Dados armazenados:</strong> Apenas cotações de câmbio (números) e datas - nenhuma informação pessoal ou financeira sensível</li>
+        </ul>
+        
+        <div class="highlight-box">
+            <strong>Controle Total:</strong> Você pode limpar todos os dados em cache a qualquer momento através das configurações do seu navegador (limpar dados do site/localStorage) sem afetar a funcionalidade do site. Novos dados serão baixados automaticamente conforme necessário.
+        </div>
 
         <h2>6. Análise de Tráfego</h2>
         <p>
@@ -360,8 +399,10 @@
             <li><strong>HTTPS:</strong> Conexão criptografada em todas as páginas</li>
             <li><strong>Minimização de Dados:</strong> Coletamos apenas o mínimo necessário</li>
             <li><strong>Processamento Local:</strong> Conversões e cálculos ocorrem no seu navegador</li>
-            <li><strong>Sem Armazenamento Sensível:</strong> Não armazenamos dados financeiros ou pessoais sensíveis</li>
+            <li><strong>Cache Local Seguro:</strong> Dados armazenados localmente ficam apenas no seu dispositivo e contêm apenas cotações numéricas</li>
+            <li><strong>Sem Armazenamento Sensível:</strong> Não armazenamos dados financeiros pessoais, valores convertidos ou histórico de consultas</li>
             <li><strong>Acesso Restrito:</strong> Acesso limitado a sistemas e informações</li>
+            <li><strong>Economia de Requisições:</strong> Sistema de cache reduz exposição de dados ao fazer menos requisições para APIs externas</li>
         </ul>
         <p>
             Apesar de nossos esforços, nenhum sistema é 100% seguro. Não podemos garantir segurança absoluta contra todas as ameaças.
@@ -405,7 +446,18 @@
 
         <h2>13. Retenção de Dados</h2>
         <p>
-            Como não coletamos ou armazenamos dados pessoais identificáveis no nosso site, não há período de retenção de dados pessoais. Dados analíticos agregados e anônimos podem ser retidos indefinidamente para fins estatísticos.
+            Como não coletamos ou armazenamos dados pessoais identificáveis no nosso site, não há período de retenção de dados pessoais. 
+        </p>
+        <p>
+            <strong>Dados em Cache Local:</strong> As cotações armazenadas no localStorage do seu navegador permanecem indefinidamente até você:
+        </p>
+        <ul>
+            <li>Limpar manualmente os dados do site nas configurações do navegador</li>
+            <li>Limpar cookies e dados de navegação</li>
+            <li>Desinstalar ou resetar o navegador</li>
+        </ul>
+        <p>
+            Dados analíticos agregados e anônimos podem ser retidos indefinidamente para fins estatísticos.
         </p>
 
         <h2>14. Alterações nesta Política</h2>
@@ -421,7 +473,7 @@
             Se você tiver dúvidas, preocupações ou solicitações relacionadas a esta Política de Privacidade ou ao tratamento de seus dados pessoais, entre em contato conosco:
         </p>
         <ul>
-            <li><strong>E-mail:</strong> <a href="mailto:cambiofree2025@gmail.com">cambiofree2025@gmail.com</a></li>
+            <li><strong>E-mail:</strong> <a href="/cdn-cgi/l/email-protection#e182808c83888e87938484d3d1d3d4a1868c80888dcf828e8c"><span class="__cf_email__" data-cfemail="c6a5a7aba4afa9a0b4a3a3f4f6f4f386a1aba7afaae8a5a9ab">[email&#160;protected]</span></a></li>
             <li><strong>Resposta:</strong> Responderemos sua solicitação em até 15 dias úteis</li>
         </ul>
 
@@ -454,7 +506,7 @@
         </div>
     </div>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         // Theme Toggle
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = document.getElementById('themeIcon');
@@ -475,12 +527,4 @@
         themeToggle.addEventListener('click', () => {
             const currentTheme = htmlElement.getAttribute('data-theme');
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            
-            htmlElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            
-            themeIcon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
-        });
-    </script>
-</body>
-</html>
+       
