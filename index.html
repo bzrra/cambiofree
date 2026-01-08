@@ -24,8 +24,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Conversor de Moedas e Média Histórica Cambial | Câmbio Free</title>
-    <meta name="description" content="Conversor de moedas gratuito com taxas em tempo real e cálculo de média histórica desde 1999. Entenda taxas de câmbio e tome decisões informadas.">
-    <meta name="keywords" content="conversor de moedas, taxa de câmbio, média histórica cambial, dólar, euro, real, cotação, forex">
+    <meta name="description" content="Calculadora de média cambial histórica gratuita. Calcule média mensal e anual de USD, EUR, GBP e CHF desde 1999. Taxa de câmbio média com dados do BCE para planejamento financeiro e análise de volatilidade.">
+    <meta name="keywords" content="conversor de moedas, taxa de câmbio, média histórica cambial, dólar, euro, real, cotação, forex, média cambial mensal USD, média cambial anual EUR, média histórica dólar, média câmbio GBP, média cambial CHF, taxa de câmbio média mensal, média cambial USD BRL, histórico cambial euro, média anual dólar real, calculadora média cambial, média histórica EUR BRL, taxa média libra esterlina, média cambial franco suíço, cotação média mensal, média anual, histórico taxas de câmbio, conversor média histórica, média cambial GBP BRL, taxa câmbio média anual, média histórica CHF BRL, calculadora taxa média, média mensal euro real, cotação média anual dólar, média cambial mês anterior">
     
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -226,9 +226,75 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 40px 20px;
+        }
+
+        .main-content-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 0;
+        }
+
+        .converter-section {
+            width: 100%;
+        }
+
+        .converter-section .converter-card {
+            margin-bottom: 0;
+        }
+
+        .quick-averages-sidebar {
+            width: 100%;
+            display: flex;
+            overflow-x: auto;
+            overflow-y: hidden;
+            gap: 10px;
+            padding: 10px 0;
+            scroll-behavior: smooth;
+        }
+
+        .quick-averages-sidebar::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .quick-averages-sidebar::-webkit-scrollbar-track {
+            background: var(--background);
+            border-radius: 3px;
+        }
+
+        .quick-averages-sidebar::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+
+        .quick-averages-sidebar::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+        }
+
+        .sidebar-header {
+            display: none;
+        }
+
+        .quick-averages-card {
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+            min-width: 180px;
+            max-width: 180px;
+            flex-shrink: 0;
+        }
+
+        .quick-averages-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 3px 8px rgba(92, 124, 250, 0.2);
+            border-color: var(--accent);
         }
 
         header {
@@ -492,6 +558,15 @@
             .swap-button {
                 width: 100%;
             }
+
+            .main-content-wrapper {
+                flex-direction: column;
+            }
+
+            .quick-averages-card {
+                min-width: 160px;
+                max-width: 160px;
+            }
         }
 
         .loading {
@@ -594,6 +669,10 @@
             transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
+        .seo-content:first-of-type {
+            margin-top: 20px;
+        }
+
         .seo-content h2 {
             color: var(--primary);
             font-size: 1.5rem;
@@ -677,6 +756,50 @@
             transition: color 0.3s ease;
         }
 
+        .search-tags-section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 40px 0;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .search-tags-title {
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 16px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .search-tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .search-tag {
+            background: var(--background);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+            display: inline-block;
+        }
+
+        .search-tag:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 6px rgba(92, 124, 250, 0.3);
+        }
+
         @keyframes spin {
             to {
                 transform: rotate(360deg);
@@ -694,6 +817,19 @@
 
             .stats-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .search-tags-section {
+                padding: 20px;
+            }
+
+            .search-tags-title {
+                font-size: 1rem;
+            }
+
+            .search-tag {
+                font-size: 0.75rem;
+                padding: 6px 10px;
             }
         }
 
@@ -809,6 +945,7 @@
             const [error, setError] = useState(null);
             const [dataFormat, setDataFormat] = useState('xlsx');
             const [imageFormat, setImageFormat] = useState('png');
+            const [quickAverages, setQuickAverages] = useState([]);
             const chartRef = useRef(null);
             const chartInstance = useRef(null);
 
@@ -832,6 +969,163 @@
                 window.addEventListener('themeChanged', handleThemeChange);
                 return () => window.removeEventListener('themeChanged', handleThemeChange);
             }, [results]);
+
+            // Calcula médias rápidas ao carregar a página
+            useEffect(() => {
+                calculateQuickAverages();
+            }, []);
+
+            const calculateQuickAverages = async () => {
+                const today = new Date();
+                const currentMonth = today.getMonth();
+                const currentYear = today.getFullYear();
+                
+                // Calcula primeiro e último dia do mês anterior
+                const lastMonthEnd = new Date(today.getFullYear(), today.getMonth(), 0);
+                const lastMonthStart = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+                
+                // Calcula primeiro e último dia do ano anterior
+                const lastYear = today.getFullYear() - 1;
+                const lastYearStart = new Date(lastYear, 0, 1); // 1º de janeiro
+                const lastYearEnd = new Date(lastYear, 11, 31); // 31 de dezembro
+                
+                const formatDate = (date) => date.toISOString().split('T')[0];
+                const formatDateBR = (date) => date.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+                
+                const currencies = [
+                    { from: 'USD', to: 'BRL', name: 'Dólar Americano' },
+                    { from: 'GBP', to: 'BRL', name: 'Libra Esterlina' },
+                    { from: 'EUR', to: 'BRL', name: 'Euro' },
+                    { from: 'CHF', to: 'BRL', name: 'Franco Suíço' }
+                ];
+                
+                const averages = [];
+                
+                for (const currency of currencies) {
+                    // Média do mês anterior
+                    try {
+                        const cacheKey = `quick_${currency.from}_${formatDate(lastMonthStart)}_${formatDate(lastMonthEnd)}`;
+                        let monthData = localStorage.getItem(cacheKey);
+                        let needsUpdate = false;
+                        
+                        if (monthData) {
+                            const parsed = JSON.parse(monthData);
+                            // Verifica se o cache é do mês atual - se mudou o mês, invalida
+                            if (parsed.cachedMonth !== currentMonth || parsed.cachedYear !== currentYear) {
+                                needsUpdate = true;
+                            }
+                        } else {
+                            needsUpdate = true;
+                        }
+                        
+                        if (needsUpdate) {
+                            const response = await fetch(
+                                `https://api.frankfurter.app/${formatDate(lastMonthStart)}..${formatDate(lastMonthEnd)}?from=${currency.from}&to=${currency.to}`
+                            );
+                            const data = await response.json();
+                            
+                            if (data.rates && Object.keys(data.rates).length > 0) {
+                                const rates = Object.values(data.rates).map(r => r[currency.to]);
+                                const avg = rates.reduce((a, b) => a + b, 0) / rates.length;
+                                
+                                monthData = JSON.stringify({
+                                    average: avg,
+                                    cachedMonth: currentMonth,
+                                    cachedYear: currentYear,
+                                    timestamp: Date.now()
+                                });
+                                localStorage.setItem(cacheKey, monthData);
+                            }
+                        }
+                        
+                        if (monthData) {
+                            const parsed = JSON.parse(monthData);
+                            averages.push({
+                                fromCurrency: currency.from,
+                                toCurrency: currency.to,
+                                label: `Mês anterior (${formatDateBR(lastMonthStart)})`,
+                                dateRange: `${lastMonthStart.toLocaleDateString('pt-BR')} - ${lastMonthEnd.toLocaleDateString('pt-BR')}`,
+                                average: parsed.average,
+                                startDate: formatDate(lastMonthStart),
+                                endDate: formatDate(lastMonthEnd)
+                            });
+                        }
+                    } catch (err) {
+                        console.error(`Erro ao buscar média mensal para ${currency.from}:`, err);
+                    }
+                    
+                    // Média do ano anterior completo
+                    try {
+                        const cacheKey = `quick_${currency.from}_${formatDate(lastYearStart)}_${formatDate(lastYearEnd)}`;
+                        let yearData = localStorage.getItem(cacheKey);
+                        let needsUpdate = false;
+                        
+                        if (yearData) {
+                            const parsed = JSON.parse(yearData);
+                            // Ano anterior só precisa ser recalculado quando o ano muda
+                            if (parsed.cachedYear !== currentYear) {
+                                needsUpdate = true;
+                            }
+                        } else {
+                            needsUpdate = true;
+                        }
+                        
+                        if (needsUpdate) {
+                            const response = await fetch(
+                                `https://api.frankfurter.app/${formatDate(lastYearStart)}..${formatDate(lastYearEnd)}?from=${currency.from}&to=${currency.to}`
+                            );
+                            const data = await response.json();
+                            
+                            if (data.rates && Object.keys(data.rates).length > 0) {
+                                const rates = Object.values(data.rates).map(r => r[currency.to]);
+                                const avg = rates.reduce((a, b) => a + b, 0) / rates.length;
+                                
+                                yearData = JSON.stringify({
+                                    average: avg,
+                                    cachedYear: currentYear,
+                                    timestamp: Date.now()
+                                });
+                                localStorage.setItem(cacheKey, yearData);
+                            }
+                        }
+                        
+                        if (yearData) {
+                            const parsed = JSON.parse(yearData);
+                            averages.push({
+                                fromCurrency: currency.from,
+                                toCurrency: currency.to,
+                                label: `Ano anterior (${lastYear})`,
+                                dateRange: `${lastYearStart.toLocaleDateString('pt-BR')} - ${lastYearEnd.toLocaleDateString('pt-BR')}`,
+                                average: parsed.average,
+                                startDate: formatDate(lastYearStart),
+                                endDate: formatDate(lastYearEnd)
+                            });
+                        }
+                    } catch (err) {
+                        console.error(`Erro ao buscar média anual para ${currency.from}:`, err);
+                    }
+                }
+                
+                setQuickAverages(averages);
+            };
+
+            const loadQuickAverage = (avg) => {
+                setFromCurrency(avg.fromCurrency);
+                setToCurrency(avg.toCurrency);
+                setStartDate(avg.startDate);
+                setEndDate(avg.endDate);
+                
+                // Scroll suave para o conversor
+                const converter = document.querySelector('.converter-card');
+                if (converter) {
+                    converter.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+                
+                // Aguarda um pouco e então calcula
+                setTimeout(() => {
+                    calculateAverage();
+                }, 500);
+            };
 
             const swapCurrencies = () => {
                 setFromCurrency(toCurrency);
@@ -1193,8 +1487,64 @@
                         <div className="subtitle">Calcule a média histórica de taxas de câmbio</div>
                     </header>
 
-                    <div className="converter-card">
-                        <div className="date-range-selector">
+                    <div className="main-content-wrapper">
+                        {quickAverages.length > 0 && (
+                            <div className="quick-averages-sidebar">
+                                {quickAverages.map((avg, idx) => (
+                                    <div
+                                        key={idx}
+                                        className="quick-averages-card"
+                                        onClick={() => loadQuickAverage(avg)}
+                                    >
+                                        <div style={{
+                                            fontSize: '0.85rem',
+                                            color: 'var(--text)',
+                                            fontWeight: '600',
+                                            marginBottom: '4px',
+                                            textAlign: 'center'
+                                        }}>
+                                            {avg.fromCurrency} → {avg.toCurrency}
+                                        </div>
+                                        
+                                        <div style={{
+                                            fontSize: '0.7rem',
+                                            color: 'var(--text-muted)',
+                                            lineHeight: '1.3',
+                                            marginBottom: '10px',
+                                            fontWeight: '500',
+                                            textAlign: 'center'
+                                        }}>
+                                            {avg.label}
+                                        </div>
+                                        
+                                        <div style={{
+                                            fontSize: '1.15rem',
+                                            fontWeight: '700',
+                                            color: 'var(--accent)',
+                                            marginBottom: '8px',
+                                            textAlign: 'center'
+                                        }}>
+                                            R$ {avg.average ? avg.average.toFixed(4) : '...'}
+                                        </div>
+                                        
+                                        <div style={{
+                                            fontSize: '0.6rem',
+                                            color: 'var(--text-muted)',
+                                            paddingTop: '8px',
+                                            borderTop: '1px solid var(--border)',
+                                            lineHeight: '1.2',
+                                            textAlign: 'center'
+                                        }}>
+                                            {avg.dateRange}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                        
+                        <div className="converter-section">
+                            <div className="converter-card">
+                                <div className="date-range-selector">
                             <div className="date-range-title">Selecione o Período</div>
                             <div className="date-inputs">
                                 <div className="date-input-group">
@@ -1359,6 +1709,8 @@
                             </div>
                         )}
                     </div>
+                    </div>
+                    </div>
 
                     <article id="o-que-e" className="seo-content">
                         <h2>O Que São Taxas de Câmbio?</h2>
@@ -1482,6 +1834,36 @@
                             </p>
                         </div>
                     </article>
+
+                    <div className="search-tags-section">
+                        <h3 className="search-tags-title">Pesquisas Relacionadas</h3>
+                        <div className="search-tags-container">
+                            <span className="search-tag">média cambial mensal USD</span>
+                            <span className="search-tag">média cambial anual EUR</span>
+                            <span className="search-tag">média histórica dólar</span>
+                            <span className="search-tag">média câmbio GBP</span>
+                            <span className="search-tag">média cambial CHF</span>
+                            <span className="search-tag">taxa de câmbio média mensal</span>
+                            <span className="search-tag">média cambial USD BRL</span>
+                            <span className="search-tag">histórico cambial euro</span>
+                            <span className="search-tag">média anual dólar real</span>
+                            <span className="search-tag">calculadora média cambial</span>
+                            <span className="search-tag">média histórica EUR BRL</span>
+                            <span className="search-tag">taxa média libra esterlina</span>
+                            <span className="search-tag">média cambial franco suíço</span>
+                            <span className="search-tag">cotação média mensal USD</span>
+                            <span className="search-tag">média anual EUR</span>
+                            <span className="search-tag">histórico taxas de câmbio</span>
+                            <span className="search-tag">conversor média histórica</span>
+                            <span className="search-tag">média cambial GBP BRL</span>
+                            <span className="search-tag">taxa câmbio média anual</span>
+                            <span className="search-tag">média histórica CHF BRL</span>
+                            <span className="search-tag">calculadora taxa média</span>
+                            <span className="search-tag">média mensal euro real</span>
+                            <span className="search-tag">cotação média anual dólar</span>
+                            <span className="search-tag">média cambial mês anterior</span>
+                        </div>
+                    </div>
 
                     <footer>
                         <p>© 2025 Câmbio Free - Todos os direitos reservados</p>
