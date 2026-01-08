@@ -24,7 +24,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Conversor de Moedas e Média Histórica Cambial | Câmbio Free</title>
-    <meta name="description" content="Calculadora de média cambial histórica gratuita. Calcule média mensal e anual de USD, EUR, GBP e CHF desde 1999. Taxa de câmbio média com dados do BCE para planejamento financeiro e análise de volatilidade.">
+    <meta name="description" content="Calculadora de média cambial histórica gratuita. Calcule média mensal e anual de USD, EUR, GBP e CHF desde 1984. Taxa de câmbio média com dados em tempo real do Banco Central do Brasil para planejamento financeiro e análise de volatilidade.">
     <meta name="keywords" content="conversor de moedas, taxa de câmbio, média histórica cambial, dólar, euro, real, cotação, forex, média cambial mensal USD, média cambial anual EUR, média histórica dólar, média câmbio GBP, média cambial CHF, taxa de câmbio média mensal, média cambial USD BRL, histórico cambial euro, média anual dólar real, calculadora média cambial, média histórica EUR BRL, taxa média libra esterlina, média cambial franco suíço, cotação média mensal, média anual, histórico taxas de câmbio, conversor média histórica, média cambial GBP BRL, taxa câmbio média anual, média histórica CHF BRL, calculadora taxa média, média mensal euro real, cotação média anual dólar, média cambial mês anterior">
     
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
@@ -901,38 +901,380 @@
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
 
+        // Lista completa de moedas - principais no topo
         const currencies = {
-            'AUD': { name: 'Dólar Australiano', flag: '🇦🇺' },
-            'BGN': { name: 'Lev Búlgaro', flag: '🇧🇬' },
-            'BRL': { name: 'Real Brasileiro', flag: '🇧🇷' },
-            'CAD': { name: 'Dólar Canadense', flag: '🇨🇦' },
-            'CHF': { name: 'Franco Suíço', flag: '🇨🇭' },
-            'CNY': { name: 'Yuan Chinês', flag: '🇨🇳' },
-            'CZK': { name: 'Coroa Tcheca', flag: '🇨🇿' },
-            'DKK': { name: 'Coroa Dinamarquesa', flag: '🇩🇰' },
-            'EUR': { name: 'Euro', flag: '🇪🇺' },
-            'GBP': { name: 'Libra Esterlina', flag: '🇬🇧' },
-            'HKD': { name: 'Dólar de Hong Kong', flag: '🇭🇰' },
-            'HUF': { name: 'Forint Húngaro', flag: '🇭🇺' },
-            'IDR': { name: 'Rupia Indonésia', flag: '🇮🇩' },
-            'ILS': { name: 'Shekel Israelense', flag: '🇮🇱' },
-            'INR': { name: 'Rúpia Indiana', flag: '🇮🇳' },
-            'ISK': { name: 'Coroa Islandesa', flag: '🇮🇸' },
-            'JPY': { name: 'Iene Japonês', flag: '🇯🇵' },
-            'KRW': { name: 'Won Sul-Coreano', flag: '🇰🇷' },
-            'MXN': { name: 'Peso Mexicano', flag: '🇲🇽' },
-            'MYR': { name: 'Ringgit Malaio', flag: '🇲🇾' },
-            'NOK': { name: 'Coroa Norueguesa', flag: '🇳🇴' },
-            'NZD': { name: 'Dólar Neozelandês', flag: '🇳🇿' },
-            'PHP': { name: 'Peso Filipino', flag: '🇵🇭' },
-            'PLN': { name: 'Zloty Polonês', flag: '🇵🇱' },
-            'RON': { name: 'Leu Romeno', flag: '🇷🇴' },
-            'SEK': { name: 'Coroa Sueca', flag: '🇸🇪' },
-            'SGD': { name: 'Dólar de Singapura', flag: '🇸🇬' },
-            'THB': { name: 'Baht Tailandês', flag: '🇹🇭' },
-            'TRY': { name: 'Lira Turca', flag: '🇹🇷' },
-            'USD': { name: 'Dólar Americano', flag: '🇺🇸' },
-            'ZAR': { name: 'Rand Sul-Africano', flag: '🇿🇦' }
+            'BRL': { name: 'Real Brasileiro' },
+            'USD': { name: 'Dólar Americano' },
+            'EUR': { name: 'Euro' },
+            'GBP': { name: 'Libra Esterlina' },
+            'CHF': { name: 'Franco Suíço' },
+            // Moedas da América
+            'ARS': { name: 'Peso Argentino' },
+            'CAD': { name: 'Dólar Canadense' },
+            'CLP': { name: 'Peso Chileno' },
+            'COP': { name: 'Peso Colombiano' },
+            'MXN': { name: 'Peso Mexicano' },
+            'PEN': { name: 'Sol Peruano' },
+            'UYU': { name: 'Peso Uruguaio' },
+            'VES': { name: 'Bolívar Venezuelano' },
+            // Moedas da Europa
+            'BGN': { name: 'Lev Búlgaro' },
+            'CZK': { name: 'Coroa Tcheca' },
+            'DKK': { name: 'Coroa Dinamarquesa' },
+            'HUF': { name: 'Forint Húngaro' },
+            'ISK': { name: 'Coroa Islandesa' },
+            'NOK': { name: 'Coroa Norueguesa' },
+            'PLN': { name: 'Zloty Polonês' },
+            'RON': { name: 'Leu Romeno' },
+            'RUB': { name: 'Rublo Russo' },
+            'SEK': { name: 'Coroa Sueca' },
+            'TRY': { name: 'Lira Turca' },
+            'UAH': { name: 'Hryvnia Ucraniana' },
+            // Moedas da Ásia
+            'AED': { name: 'Dirham dos Emirados' },
+            'CNY': { name: 'Yuan Chinês' },
+            'HKD': { name: 'Dólar de Hong Kong' },
+            'IDR': { name: 'Rupia Indonésia' },
+            'ILS': { name: 'Novo Shekel Israelense' },
+            'INR': { name: 'Rupia Indiana' },
+            'JPY': { name: 'Iene Japonês' },
+            'KRW': { name: 'Won Sul-Coreano' },
+            'MYR': { name: 'Ringgit Malaio' },
+            'PHP': { name: 'Peso Filipino' },
+            'SAR': { name: 'Riyal Saudita' },
+            'SGD': { name: 'Dólar de Singapura' },
+            'THB': { name: 'Baht Tailandês' },
+            'TWD': { name: 'Dólar Taiwanês' },
+            'VND': { name: 'Dong Vietnamita' },
+            // Moedas da Oceania
+            'AUD': { name: 'Dólar Australiano' },
+            'NZD': { name: 'Dólar Neozelandês' },
+            // Moedas da África
+            'EGP': { name: 'Libra Egípcia' },
+            'NGN': { name: 'Naira Nigeriana' },
+            'ZAR': { name: 'Rand Sul-Africano' },
+            // Criptomoedas
+            'BTC': { name: 'Bitcoin' },
+            'LTC': { name: 'Litecoin' },
+            'ETH': { name: 'Ethereum' },
+            // Outras moedas importantes
+            'AFN': { name: 'Afghani Afegão' },
+            'ALL': { name: 'Lek Albanês' },
+            'AMD': { name: 'Dram Armênio' },
+            'ANG': { name: 'Florim das Antilhas' },
+            'AOA': { name: 'Kwanza Angolano' },
+            'AWG': { name: 'Florim Arubano' },
+            'AZN': { name: 'Manat Azeri' },
+            'BAM': { name: 'Marco Conversível' },
+            'BBD': { name: 'Dólar de Barbados' },
+            'BDT': { name: 'Taka de Bangladesh' },
+            'BHD': { name: 'Dinar do Bahrein' },
+            'BIF': { name: 'Franco Burundiano' },
+            'BMD': { name: 'Dólar das Bermudas' },
+            'BND': { name: 'Dólar de Brunei' },
+            'BOB': { name: 'Boliviano' },
+            'BSD': { name: 'Dólar das Bahamas' },
+            'BWP': { name: 'Pula de Botswana' },
+            'BYN': { name: 'Rublo Bielorrusso' },
+            'BZD': { name: 'Dólar de Belize' },
+            'CDF': { name: 'Franco Congolês' },
+            'CRC': { name: 'Colón Costarriquenho' },
+            'CUP': { name: 'Peso Cubano' },
+            'CVE': { name: 'Escudo Cabo-Verdiano' },
+            'DJF': { name: 'Franco do Djibuti' },
+            'DOP': { name: 'Peso Dominicano' },
+            'DZD': { name: 'Dinar Argelino' },
+            'ERN': { name: 'Nakfa da Eritreia' },
+            'ETB': { name: 'Birr Etíope' },
+            'FJD': { name: 'Dólar de Fiji' },
+            'FKP': { name: 'Libra das Falklands' },
+            'GEL': { name: 'Lari Georgiano' },
+            'GHS': { name: 'Cedi Ganês' },
+            'GIP': { name: 'Libra de Gibraltar' },
+            'GMD': { name: 'Dalasi da Gâmbia' },
+            'GNF': { name: 'Franco Guineano' },
+            'GTQ': { name: 'Quetzal Guatemalteco' },
+            'GYD': { name: 'Dólar da Guiana' },
+            'HNL': { name: 'Lempira Hondurenha' },
+            'HRK': { name: 'Kuna Croata' },
+            'HTG': { name: 'Gourde Haitiano' },
+            'IQD': { name: 'Dinar Iraquiano' },
+            'IRR': { name: 'Rial Iraniano' },
+            'JMD': { name: 'Dólar Jamaicano' },
+            'JOD': { name: 'Dinar Jordaniano' },
+            'KES': { name: 'Xelim Queniano' },
+            'KGS': { name: 'Som Quirguiz' },
+            'KHR': { name: 'Riel Cambojano' },
+            'KMF': { name: 'Franco Comoriano' },
+            'KWD': { name: 'Dinar Kuwaitiano' },
+            'KYD': { name: 'Dólar das Ilhas Cayman' },
+            'KZT': { name: 'Tenge Cazaque' },
+            'LAK': { name: 'Kip Laosiano' },
+            'LBP': { name: 'Libra Libanesa' },
+            'LKR': { name: 'Rupia do Sri Lanka' },
+            'LRD': { name: 'Dólar Liberiano' },
+            'LSL': { name: 'Loti do Lesoto' },
+            'LYD': { name: 'Dinar Líbio' },
+            'MAD': { name: 'Dirham Marroquino' },
+            'MDL': { name: 'Leu Moldavo' },
+            'MGA': { name: 'Ariary Malgaxe' },
+            'MKD': { name: 'Dinar Macedônio' },
+            'MMK': { name: 'Kyat de Myanmar' },
+            'MNT': { name: 'Tugrik Mongol' },
+            'MOP': { name: 'Pataca de Macau' },
+            'MRU': { name: 'Ouguiya Mauritana' },
+            'MUR': { name: 'Rupia Mauriciana' },
+            'MVR': { name: 'Rufiyaa Maldiva' },
+            'MWK': { name: 'Kwacha Malauiano' },
+            'MZN': { name: 'Metical Moçambicano' },
+            'NAD': { name: 'Dólar Namibiano' },
+            'NIO': { name: 'Córdoba Nicaraguense' },
+            'NPR': { name: 'Rupia Nepalesa' },
+            'OMR': { name: 'Rial Omanense' },
+            'PAB': { name: 'Balboa Panamenha' },
+            'PGK': { name: 'Kina Papua-Nova Guiné' },
+            'PKR': { name: 'Rupia Paquistanesa' },
+            'PYG': { name: 'Guarani Paraguaio' },
+            'QAR': { name: 'Riyal do Catar' },
+            'RSD': { name: 'Dinar Sérvio' },
+            'RWF': { name: 'Franco Ruandês' },
+            'SBD': { name: 'Dólar das Ilhas Salomão' },
+            'SCR': { name: 'Rupia das Seychelles' },
+            'SDG': { name: 'Libra Sudanesa' },
+            'SOS': { name: 'Xelim Somali' },
+            'SRD': { name: 'Dólar Surinamês' },
+            'SSP': { name: 'Libra Sul-Sudanesa' },
+            'STN': { name: 'Dobra São-Tomense' },
+            'SYP': { name: 'Libra Síria' },
+            'SZL': { name: 'Lilangeni Suazi' },
+            'TJS': { name: 'Somoni Tajique' },
+            'TMT': { name: 'Manat Turcomeno' },
+            'TND': { name: 'Dinar Tunisiano' },
+            'TOP': { name: 'Paʻanga Tonganesa' },
+            'TTD': { name: 'Dólar de Trinidad e Tobago' },
+            'TZS': { name: 'Xelim Tanzaniano' },
+            'UGX': { name: 'Xelim Ugandense' },
+            'UZS': { name: 'Som Uzbeque' },
+            'VUV': { name: 'Vatu de Vanuatu' },
+            'WST': { name: 'Tala Samoana' },
+            'XAF': { name: 'Franco CFA (África Central)' },
+            'XCD': { name: 'Dólar do Caribe Oriental' },
+            'XOF': { name: 'Franco CFA (África Ocidental)' },
+            'XPF': { name: 'Franco CFP' },
+            'YER': { name: 'Rial Iemenita' },
+            'ZMW': { name: 'Kwacha Zambiano' },
+            'ZWL': { name: 'Dólar do Zimbábue' }
+        };
+
+        // Funções auxiliares para AwesomeAPI
+        const formatDateForAwesome = (dateString) => {
+            // Formato: YYYYMMDD (ex: 20241231)
+            const date = new Date(dateString + 'T12:00:00');
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}${month}${day}`;
+        };
+
+        // Sistema de cache por dia individual
+        const DailyCache = {
+            // Verifica se um dia específico está no cache
+            hasDay: (moeda, date) => {
+                const cacheKey = `daily_${moeda}_${date}`;
+                return localStorage.getItem(cacheKey) !== null;
+            },
+            
+            // Obtém a taxa de um dia específico do cache
+            getDay: (moeda, date) => {
+                const cacheKey = `daily_${moeda}_${date}`;
+                const cached = localStorage.getItem(cacheKey);
+                if (cached) {
+                    const data = JSON.parse(cached);
+                    return data.rate;
+                }
+                return null;
+            },
+            
+            // Salva a taxa de um dia específico no cache
+            setDay: (moeda, date, rate) => {
+                const cacheKey = `daily_${moeda}_${date}`;
+                localStorage.setItem(cacheKey, JSON.stringify({
+                    rate: rate,
+                    timestamp: Date.now()
+                }));
+            },
+            
+            // Obtém quais dias do período já estão no cache
+            getCachedDaysInPeriod: (moeda, startDate, endDate) => {
+                const cachedRates = {};
+                const start = new Date(startDate + 'T12:00:00');
+                const end = new Date(endDate + 'T12:00:00');
+                
+                for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+                    const isoDate = d.toISOString().split('T')[0];
+                    const rate = DailyCache.getDay(moeda, isoDate);
+                    if (rate !== null) {
+                        cachedRates[isoDate] = rate;
+                    }
+                }
+                
+                return cachedRates;
+            },
+            
+            // Identifica períodos que precisam ser buscados da API
+            getMissingPeriods: (moeda, startDate, endDate) => {
+                const start = new Date(startDate + 'T12:00:00');
+                const end = new Date(endDate + 'T12:00:00');
+                const periods = [];
+                let periodStart = null;
+                
+                for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+                    const isoDate = d.toISOString().split('T')[0];
+                    const hasCache = DailyCache.hasDay(moeda, isoDate);
+                    
+                    if (!hasCache) {
+                        if (periodStart === null) {
+                            periodStart = isoDate;
+                        }
+                    } else {
+                        if (periodStart !== null) {
+                            const prevDate = new Date(d);
+                            prevDate.setDate(prevDate.getDate() - 1);
+                            periods.push({
+                                start: periodStart,
+                                end: prevDate.toISOString().split('T')[0]
+                            });
+                            periodStart = null;
+                        }
+                    }
+                }
+                
+                // Se ainda tiver um período aberto no final
+                if (periodStart !== null) {
+                    periods.push({
+                        start: periodStart,
+                        end: endDate
+                    });
+                }
+                
+                return periods;
+            }
+        };
+
+        // Sistema de cache mensal/anual inteligente
+        const PeriodCache = {
+            // Limpa caches antigos de períodos que não são mais válidos
+            cleanOldCaches: () => {
+                const today = new Date();
+                const currentMonth = today.getMonth();
+                const currentYear = today.getFullYear();
+                
+                // Varre o localStorage procurando caches antigos
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key && key.startsWith('quick_')) {
+                        const cached = localStorage.getItem(key);
+                        if (cached) {
+                            try {
+                                const data = JSON.parse(cached);
+                                
+                                // Se é cache mensal e o mês/ano mudou, remove
+                                if (data.cachedMonth !== undefined) {
+                                    if (data.cachedMonth !== currentMonth || data.cachedYear !== currentYear) {
+                                        console.log('Removendo cache mensal antigo:', key);
+                                        localStorage.removeItem(key);
+                                    }
+                                }
+                                
+                                // Se é cache anual e o ano mudou, remove
+                                if (data.cachedYear !== undefined && data.cachedMonth === undefined) {
+                                    if (data.cachedYear !== currentYear) {
+                                        console.log('Removendo cache anual antigo:', key);
+                                        localStorage.removeItem(key);
+                                    }
+                                }
+                            } catch (e) {
+                                // Se não conseguir fazer parse, remove
+                                localStorage.removeItem(key);
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        const fetchAwesomePeriod = async (moeda, dataInicial, dataFinal) => {
+            try {
+                // Primeiro, verifica o cache
+                const cachedRates = DailyCache.getCachedDaysInPeriod(moeda, dataInicial, dataFinal);
+                const missingPeriods = DailyCache.getMissingPeriods(moeda, dataInicial, dataFinal);
+                
+                console.log('Cache status:', {
+                    cachedDays: Object.keys(cachedRates).length,
+                    missingPeriods: missingPeriods.length
+                });
+                
+                // Se não há períodos faltando, retorna só o cache
+                if (missingPeriods.length === 0) {
+                    console.log('Usando dados totalmente do cache');
+                    return cachedRates;
+                }
+                
+                // Busca apenas os períodos faltantes
+                const allRates = { ...cachedRates };
+                
+                for (const period of missingPeriods) {
+                    const start = new Date(period.start + 'T12:00:00');
+                    const end = new Date(period.end + 'T12:00:00');
+                    const diffDays = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
+                    
+                    // AwesomeAPI usa formato USD-BRL
+                    const pair = `${moeda}-BRL`;
+                    
+                    // Formato das datas: YYYYMMDD
+                    const startFormatted = formatDateForAwesome(period.start);
+                    const endFormatted = formatDateForAwesome(period.end);
+                    
+                    // URL com parâmetros de data
+                    const url = `https://economia.awesomeapi.com.br/json/daily/${pair}/${diffDays}?start_date=${startFormatted}&end_date=${endFormatted}`;
+                    
+                    console.log('Buscando período da API:', { moeda, period, url });
+                    
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        console.error('Erro na resposta AwesomeAPI:', response.status, response.statusText);
+                        continue;
+                    }
+                    
+                    const data = await response.json();
+                    
+                    if (data && Array.isArray(data) && data.length > 0) {
+                        data.forEach(item => {
+                            // timestamp está em segundos, converter para milissegundos
+                            const timestamp = parseInt(item.timestamp) * 1000;
+                            const date = new Date(timestamp);
+                            const isoDate = date.toISOString().split('T')[0];
+                            
+                            // Usar o valor de 'ask' (venda)
+                            const rate = parseFloat(item.ask);
+                            
+                            // Salva no cache individual
+                            DailyCache.setDay(moeda, isoDate, rate);
+                            
+                            // Adiciona ao resultado
+                            if (!allRates[isoDate]) {
+                                allRates[isoDate] = rate;
+                            }
+                        });
+                    }
+                }
+                
+                console.log('Taxas finais (cache + API):', Object.keys(allRates).length, 'dias');
+                return allRates;
+            } catch (error) {
+                console.error(`Erro ao buscar período para ${moeda}:`, error);
+                return null;
+            }
         };
 
         function HistoricalConverter() {
@@ -956,6 +1298,9 @@
                 
                 setEndDate(today.toISOString().split('T')[0]);
                 setStartDate(thirtyDaysAgo.toISOString().split('T')[0]);
+                
+                // Limpa caches antigos na inicialização
+                PeriodCache.cleanOldCaches();
             }, []);
 
             useEffect(() => {
@@ -1004,13 +1349,14 @@
                 for (const currency of currencies) {
                     // Média do mês anterior
                     try {
-                        const cacheKey = `quick_${currency.from}_${formatDate(lastMonthStart)}_${formatDate(lastMonthEnd)}`;
+                        const cacheKey = `quick_${currency.from}_month_${lastMonthStart.getFullYear()}_${lastMonthStart.getMonth()}`;
                         let monthData = localStorage.getItem(cacheKey);
                         let needsUpdate = false;
                         
                         if (monthData) {
                             const parsed = JSON.parse(monthData);
-                            // Verifica se o cache é do mês atual - se mudou o mês, invalida
+                            // Cache mensal é válido enquanto estamos no mês atual
+                            // Quando vira o mês, o cache do mês anterior (que agora é 2 meses atrás) será removido
                             if (parsed.cachedMonth !== currentMonth || parsed.cachedYear !== currentYear) {
                                 needsUpdate = true;
                             }
@@ -1019,19 +1365,18 @@
                         }
                         
                         if (needsUpdate) {
-                            const response = await fetch(
-                                `https://api.frankfurter.app/${formatDate(lastMonthStart)}..${formatDate(lastMonthEnd)}?from=${currency.from}&to=${currency.to}`
-                            );
-                            const data = await response.json();
+                            const rates = await fetchAwesomePeriod(currency.from, formatDate(lastMonthStart), formatDate(lastMonthEnd));
                             
-                            if (data.rates && Object.keys(data.rates).length > 0) {
-                                const rates = Object.values(data.rates).map(r => r[currency.to]);
-                                const avg = rates.reduce((a, b) => a + b, 0) / rates.length;
+                            if (rates && Object.keys(rates).length > 0) {
+                                const rateValues = Object.values(rates);
+                                const avg = rateValues.reduce((a, b) => a + b, 0) / rateValues.length;
                                 
                                 monthData = JSON.stringify({
                                     average: avg,
                                     cachedMonth: currentMonth,
                                     cachedYear: currentYear,
+                                    periodMonth: lastMonthStart.getMonth(),
+                                    periodYear: lastMonthStart.getFullYear(),
                                     timestamp: Date.now()
                                 });
                                 localStorage.setItem(cacheKey, monthData);
@@ -1056,13 +1401,14 @@
                     
                     // Média do ano anterior completo
                     try {
-                        const cacheKey = `quick_${currency.from}_${formatDate(lastYearStart)}_${formatDate(lastYearEnd)}`;
+                        const cacheKey = `quick_${currency.from}_year_${lastYear}`;
                         let yearData = localStorage.getItem(cacheKey);
                         let needsUpdate = false;
                         
                         if (yearData) {
                             const parsed = JSON.parse(yearData);
-                            // Ano anterior só precisa ser recalculado quando o ano muda
+                            // Cache anual é válido enquanto estamos no ano atual
+                            // Quando vira o ano, o cache do ano anterior será removido
                             if (parsed.cachedYear !== currentYear) {
                                 needsUpdate = true;
                             }
@@ -1071,18 +1417,16 @@
                         }
                         
                         if (needsUpdate) {
-                            const response = await fetch(
-                                `https://api.frankfurter.app/${formatDate(lastYearStart)}..${formatDate(lastYearEnd)}?from=${currency.from}&to=${currency.to}`
-                            );
-                            const data = await response.json();
+                            const rates = await fetchAwesomePeriod(currency.from, formatDate(lastYearStart), formatDate(lastYearEnd));
                             
-                            if (data.rates && Object.keys(data.rates).length > 0) {
-                                const rates = Object.values(data.rates).map(r => r[currency.to]);
-                                const avg = rates.reduce((a, b) => a + b, 0) / rates.length;
+                            if (rates && Object.keys(rates).length > 0) {
+                                const rateValues = Object.values(rates);
+                                const avg = rateValues.reduce((a, b) => a + b, 0) / rateValues.length;
                                 
                                 yearData = JSON.stringify({
                                     average: avg,
                                     cachedYear: currentYear,
+                                    periodYear: lastYear,
                                     timestamp: Date.now()
                                 });
                                 localStorage.setItem(cacheKey, yearData);
@@ -1183,49 +1527,41 @@
 				setResults(null);
 			
 				try {
-					const response = await fetch(
-						`https://api.frankfurter.app/${startDate}..${endDate}?from=${fromCurrency}&to=${toCurrency}`
-					);
+				const rates = await fetchAwesomePeriod(fromCurrency, startDate, endDate);
 			
-					if (!response.ok) throw new Error('Erro ao buscar dados históricos');
-					const data = await response.json();
-					
-					if (!data.rates || Object.keys(data.rates).length === 0) {
-						throw new Error('Não foi possível obter dados para este período');
-					}
+				if (!rates || Object.keys(rates).length === 0) {
+					throw new Error('Não foi possível obter dados para este período. Verifique se as datas estão corretas e se há dados disponíveis para o período selecionado. Fins de semana e feriados não possuem cotação.');
+				}
 			
-					const rates = [];
-					const dataPoints = [];
-					Object.entries(data.rates).forEach(([date, rateObj]) => {
-						if (rateObj[toCurrency]) {
-							const rate = rateObj[toCurrency];
-							rates.push(rate);
-							dataPoints.push({ date, rate });
-						}
-					});
+				const rateValues = [];
+				const dataPoints = [];
+				Object.entries(rates).forEach(([date, rate]) => {
+					rateValues.push(rate);
+					dataPoints.push({ date, rate });
+				});
 			
-					dataPoints.sort((a, b) => new Date(a.date) - new Date(b.date));
-					const average = rates.reduce((sum, rate) => sum + rate, 0) / rates.length;
-					const min = Math.min(...rates);
-					const max = Math.max(...rates);
-					const variance = rates.reduce((sum, rate) => sum + Math.pow(rate - average, 2), 0) / rates.length;
-					const standardDeviation = Math.sqrt(variance);
+				dataPoints.sort((a, b) => new Date(a.date) - new Date(b.date));
+				const average = rateValues.reduce((sum, rate) => sum + rate, 0) / rateValues.length;
+				const min = Math.min(...rateValues);
+				const max = Math.max(...rateValues);
+				const variance = rateValues.reduce((sum, rate) => sum + Math.pow(rate - average, 2), 0) / rateValues.length;
+				const standardDeviation = Math.sqrt(variance);
 			
-					const finalResults = {
-						average, min, max, standardDeviation, dataPoints,
-						totalDays: rates.length
-					};
+				const finalResults = {
+					average, min, max, standardDeviation, dataPoints,
+					totalDays: rateValues.length
+				};
 			
-					// Salva no cache antes de atualizar o estado
-					localStorage.setItem(cacheKey, JSON.stringify({
-						timestamp: Date.now(),
-						data: finalResults
-					}));
+				// Salva no cache antes de atualizar o estado
+				localStorage.setItem(cacheKey, JSON.stringify({
+					timestamp: Date.now(),
+					data: finalResults
+				}));
 			
-					setResults(finalResults);
-					setTimeout(() => createChart(dataPoints), 100);
+				setResults(finalResults);
+				setTimeout(() => createChart(dataPoints), 100);
 			
-				} catch (err) {
+						} catch (err) {
 					setError(err.message || 'Erro ao calcular média.');
 				} finally {
 					setLoading(false);
@@ -1579,7 +1915,7 @@
                                 >
                                     {Object.keys(currencies).map(code => (
                                         <option key={code} value={code}>
-                                            {currencies[code].flag} {code} - {currencies[code].name}
+                                            {code} - {currencies[code].name}
                                         </option>
                                     ))}
                                 </select>
@@ -1597,7 +1933,7 @@
                                 >
                                     {Object.keys(currencies).map(code => (
                                         <option key={code} value={code}>
-                                            {currencies[code].flag} {code} - {currencies[code].name}
+                                            {code} - {currencies[code].name}
                                         </option>
                                     ))}
                                 </select>
@@ -1809,7 +2145,7 @@
                         <div className="faq-item">
                             <h3 className="faq-question">As taxas são atualizadas em tempo real?</h3>
                             <p className="faq-answer">
-                                Sim, utilizamos dados do Banco Central Europeu (ECB) atualizados diariamente por volta das 16h CET.
+                                Sim, utilizamos dados do Banco Central do Brasil através da AwesomeAPI, atualizados em tempo real.
                             </p>
                         </div>
 
@@ -1871,7 +2207,7 @@
                             <a href="privacy-policy.html">Política de Privacidade</a>
                         </p>
                         <p style={{marginTop: '15px', fontSize: '0.85rem'}}>
-                            Taxas fornecidas pelo Banco Central Europeu (ECB) através da Frankfurter API. 
+                            Taxas fornecidas pelo Banco Central do Brasil através da AwesomeAPI. Os dados são atualizados em tempo real e provenientes de fontes oficiais. 
                             As taxas são apenas para fins informativos.
                         </p>
                     </footer>
