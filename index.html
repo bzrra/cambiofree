@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-00FTYQYPW6"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-00FTYQYPW6');
+    </script>
+    
     <!-- EZOIC – Privacy Scripts -->
     <script data-cfasync="false" src="https://cmp.gatekeeperconsent.com/min.js"></script>
     <script data-cfasync="false" src="https://the.gatekeeperconsent.com/cmp.min.js"></script>
@@ -837,87 +846,98 @@
                 const date = new Date(dateString);
                 return date.toLocaleDateString('pt-BR');
             };
-
-            const calculateAverage = async () => {
-                if (!startDate || !endDate) {
-                    setError('Por favor, selecione as datas de início e fim');
-                    return;
-                }
-
-                const start = new Date(startDate);
-                const end = new Date(endDate);
-
-                if (start > end) {
-                    setError('A data de início deve ser anterior à data de fim');
-                    return;
-                }
-
-                const daysDiff = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
-                if (daysDiff > 365) {
-                    setError('O período máximo é de 365 dias');
-                    return;
-                }
-
-                setLoading(true);
-                setError(null);
-                setResults(null);
-
-                try {
-                    const response = await fetch(
-                        `https://api.frankfurter.app/${startDate}..${endDate}?from=${fromCurrency}&to=${toCurrency}`
-                    );
-
-                    if (!response.ok) {
-                        throw new Error('Erro ao buscar dados históricos');
-                    }
-
-                    const data = await response.json();
-                    
-                    if (!data.rates || Object.keys(data.rates).length === 0) {
-                        throw new Error('Não foi possível obter dados para este período');
-                    }
-
-                    const rates = [];
-                    const dataPoints = [];
-
-                    Object.entries(data.rates).forEach(([date, rateObj]) => {
-                        if (rateObj[toCurrency]) {
-                            const rate = rateObj[toCurrency];
-                            rates.push(rate);
-                            dataPoints.push({ date, rate });
-                        }
-                    });
-
-                    if (rates.length === 0) {
-                        throw new Error('Não foi possível obter dados para este período');
-                    }
-
-                    dataPoints.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-                    const average = rates.reduce((sum, rate) => sum + rate, 0) / rates.length;
-                    const min = Math.min(...rates);
-                    const max = Math.max(...rates);
-                    const variance = rates.reduce((sum, rate) => sum + Math.pow(rate - average, 2), 0) / rates.length;
-                    const standardDeviation = Math.sqrt(variance);
-
-                    setResults({
-                        average,
-                        min,
-                        max,
-                        standardDeviation,
-                        dataPoints,
-                        totalDays: rates.length
-                    });
-
-                    setTimeout(() => createChart(dataPoints), 100);
-
-                } catch (err) {
-                    console.error('Error:', err);
-                    setError(err.message || 'Erro ao calcular média. Tente novamente.');
-                } finally {
-                    setLoading(false);
-                }
-            };
+			
+			const calculateAverage = async () => {
+				if (!startDate || !endDate) {
+					setError('Por favor, selecione as datas de início e fim');
+					return;
+				}
+			
+				const start = new Date(startDate);
+				const end = new Date(endDate);
+			
+				if (start > end) {
+					setError('A data de início deve ser anterior à data de fim');
+					return;
+				}
+			
+				const daysDiff = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+				if (daysDiff > 365) {
+					setError('O período máximo é de 365 dias');
+					return;
+				}
+			
+				// --- LÓGICA DE CACHE COMEÇA AQUI ---
+				const cacheKey = `cache_${fromCurrency}_${toCurrency}_${startDate}_${endDate}`;
+				const cachedData = localStorage.getItem(cacheKey);
+			
+				if (cachedData) {
+					const parsed = JSON.parse(cachedData);
+					// Opcional: Validar se o cache tem menos de 24h
+					const isFresh = (Date.now() - parsed.timestamp) < 86400000; 
+					
+					if (isFresh) {
+						setResults(parsed.data);
+						setTimeout(() => createChart(parsed.data.dataPoints), 100);
+						return; // Retorna sem chamar a API
+					}
+				}
+				// --- LÓGICA DE CACHE TERMINA AQUI ---
+			
+				setLoading(true);
+				setError(null);
+				setResults(null);
+			
+				try {
+					const response = await fetch(
+						`https://api.frankfurter.app/${startDate}..${endDate}?from=${fromCurrency}&to=${toCurrency}`
+					);
+			
+					if (!response.ok) throw new Error('Erro ao buscar dados históricos');
+					const data = await response.json();
+					
+					if (!data.rates || Object.keys(data.rates).length === 0) {
+						throw new Error('Não foi possível obter dados para este período');
+					}
+			
+					const rates = [];
+					const dataPoints = [];
+					Object.entries(data.rates).forEach(([date, rateObj]) => {
+						if (rateObj[toCurrency]) {
+							const rate = rateObj[toCurrency];
+							rates.push(rate);
+							dataPoints.push({ date, rate });
+						}
+					});
+			
+					dataPoints.sort((a, b) => new Date(a.date) - new Date(b.date));
+					const average = rates.reduce((sum, rate) => sum + rate, 0) / rates.length;
+					const min = Math.min(...rates);
+					const max = Math.max(...rates);
+					const variance = rates.reduce((sum, rate) => sum + Math.pow(rate - average, 2), 0) / rates.length;
+					const standardDeviation = Math.sqrt(variance);
+			
+					const finalResults = {
+						average, min, max, standardDeviation, dataPoints,
+						totalDays: rates.length
+					};
+			
+					// Salva no cache antes de atualizar o estado
+					localStorage.setItem(cacheKey, JSON.stringify({
+						timestamp: Date.now(),
+						data: finalResults
+					}));
+			
+					setResults(finalResults);
+					setTimeout(() => createChart(dataPoints), 100);
+			
+				} catch (err) {
+					setError(err.message || 'Erro ao calcular média.');
+				} finally {
+					setLoading(false);
+				}
+			};
+            
 
             const createChart = (dataPoints) => {
                 if (!chartRef.current) return;
