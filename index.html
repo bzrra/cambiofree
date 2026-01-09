@@ -1527,7 +1527,42 @@
 				setResults(null);
 			
 				try {
-				const rates = await fetchAwesomePeriod(fromCurrency, startDate, endDate);
+				let rates = {};
+				
+				// Caso 1: Conversão para BRL (ex: USD -> BRL)
+				if (toCurrency === 'BRL' && fromCurrency !== 'BRL') {
+					rates = await fetchAwesomePeriod(fromCurrency, startDate, endDate);
+				}
+				// Caso 2: Conversão de BRL (ex: BRL -> USD)
+				else if (fromCurrency === 'BRL' && toCurrency !== 'BRL') {
+					const inversedRates = await fetchAwesomePeriod(toCurrency, startDate, endDate);
+					if (inversedRates && Object.keys(inversedRates).length > 0) {
+						// Inverte as taxas: se USD-BRL é 5.0, então BRL-USD é 1/5.0 = 0.2
+						rates = {};
+						Object.entries(inversedRates).forEach(([date, rate]) => {
+							rates[date] = 1 / rate;
+						});
+					}
+				}
+				// Caso 3: Conversão cruzada (ex: USD -> EUR)
+				else if (fromCurrency !== 'BRL' && toCurrency !== 'BRL') {
+					const fromRates = await fetchAwesomePeriod(fromCurrency, startDate, endDate);
+					const toRates = await fetchAwesomePeriod(toCurrency, startDate, endDate);
+					
+					if (fromRates && toRates && Object.keys(fromRates).length > 0 && Object.keys(toRates).length > 0) {
+						// Taxa cruzada: (USD-BRL) / (EUR-BRL) = USD-EUR
+						rates = {};
+						Object.keys(fromRates).forEach(date => {
+							if (toRates[date]) {
+								rates[date] = fromRates[date] / toRates[date];
+							}
+						});
+					}
+				}
+				// Caso 4: BRL para BRL (taxa = 1)
+				else if (fromCurrency === 'BRL' && toCurrency === 'BRL') {
+					throw new Error('Conversão de BRL para BRL não é necessária. As moedas são iguais.');
+				}
 			
 				if (!rates || Object.keys(rates).length === 0) {
 					throw new Error('Não foi possível obter dados para este período. Verifique se as datas estão corretas e se há dados disponíveis para o período selecionado. Fins de semana e feriados não possuem cotação.');
