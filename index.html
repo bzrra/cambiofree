@@ -901,169 +901,131 @@
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
 
-        // Lista completa de moedas - principais no topo
+        // Lista de moedas confiáveis com dados históricos disponíveis
         const currencies = {
             'BRL': { name: 'Real Brasileiro' },
             'USD': { name: 'Dólar Americano' },
             'EUR': { name: 'Euro' },
             'GBP': { name: 'Libra Esterlina' },
             'CHF': { name: 'Franco Suíço' },
+            'JPY': { name: 'Iene Japonês' },
+            'CAD': { name: 'Dólar Canadense' },
+            'AUD': { name: 'Dólar Australiano' },
+            'NZD': { name: 'Dólar Neozelandês' },
             // Moedas da América
             'ARS': { name: 'Peso Argentino' },
-            'CAD': { name: 'Dólar Canadense' },
             'CLP': { name: 'Peso Chileno' },
             'COP': { name: 'Peso Colombiano' },
             'MXN': { name: 'Peso Mexicano' },
             'PEN': { name: 'Sol Peruano' },
             'UYU': { name: 'Peso Uruguaio' },
-            'VES': { name: 'Bolívar Venezuelano' },
+            'BOB': { name: 'Boliviano' },
+            'PYG': { name: 'Guarani Paraguaio' },
+            'CRC': { name: 'Colón Costarriquenho' },
+            'PAB': { name: 'Balboa Panamenha' },
+            'DOP': { name: 'Peso Dominicano' },
+            'GTQ': { name: 'Quetzal Guatemalteco' },
+            'HNL': { name: 'Lempira Hondurenha' },
+            'NIO': { name: 'Córdoba Nicaraguense' },
+            'JMD': { name: 'Dólar Jamaicano' },
+            'TTD': { name: 'Dólar de Trinidad e Tobago' },
+            'BBD': { name: 'Dólar de Barbados' },
+            'BSD': { name: 'Dólar das Bahamas' },
+            'BZD': { name: 'Dólar de Belize' },
+            'GYD': { name: 'Dólar da Guiana' },
+            'SRD': { name: 'Dólar Surinamês' },
+            'AWG': { name: 'Florim Arubano' },
+            'ANG': { name: 'Florim das Antilhas' },
             // Moedas da Europa
-            'BGN': { name: 'Lev Búlgaro' },
-            'CZK': { name: 'Coroa Tcheca' },
-            'DKK': { name: 'Coroa Dinamarquesa' },
-            'HUF': { name: 'Forint Húngaro' },
-            'ISK': { name: 'Coroa Islandesa' },
             'NOK': { name: 'Coroa Norueguesa' },
-            'PLN': { name: 'Zloty Polonês' },
-            'RON': { name: 'Leu Romeno' },
-            'RUB': { name: 'Rublo Russo' },
             'SEK': { name: 'Coroa Sueca' },
-            'TRY': { name: 'Lira Turca' },
+            'DKK': { name: 'Coroa Dinamarquesa' },
+            'ISK': { name: 'Coroa Islandesa' },
+            'PLN': { name: 'Zloty Polonês' },
+            'CZK': { name: 'Coroa Tcheca' },
+            'HUF': { name: 'Forint Húngaro' },
+            'RON': { name: 'Leu Romeno' },
+            'BGN': { name: 'Lev Búlgaro' },
+            'HRK': { name: 'Kuna Croata' },
+            'RSD': { name: 'Dinar Sérvio' },
+            'BAM': { name: 'Marco Conversível' },
+            'MKD': { name: 'Dinar Macedônio' },
+            'ALL': { name: 'Lek Albanês' },
+            'RUB': { name: 'Rublo Russo' },
             'UAH': { name: 'Hryvnia Ucraniana' },
+            'BYN': { name: 'Rublo Bielorrusso' },
+            'MDL': { name: 'Leu Moldavo' },
+            'GEL': { name: 'Lari Georgiano' },
+            'AMD': { name: 'Dram Armênio' },
+            'AZN': { name: 'Manat Azeri' },
+            'TRY': { name: 'Lira Turca' },
             // Moedas da Ásia
-            'AED': { name: 'Dirham dos Emirados' },
             'CNY': { name: 'Yuan Chinês' },
             'HKD': { name: 'Dólar de Hong Kong' },
-            'IDR': { name: 'Rupia Indonésia' },
-            'ILS': { name: 'Novo Shekel Israelense' },
-            'INR': { name: 'Rupia Indiana' },
-            'JPY': { name: 'Iene Japonês' },
-            'KRW': { name: 'Won Sul-Coreano' },
-            'MYR': { name: 'Ringgit Malaio' },
-            'PHP': { name: 'Peso Filipino' },
-            'SAR': { name: 'Riyal Saudita' },
             'SGD': { name: 'Dólar de Singapura' },
-            'THB': { name: 'Baht Tailandês' },
+            'KRW': { name: 'Won Sul-Coreano' },
             'TWD': { name: 'Dólar Taiwanês' },
+            'THB': { name: 'Baht Tailandês' },
+            'MYR': { name: 'Ringgit Malaio' },
+            'IDR': { name: 'Rupia Indonésia' },
+            'PHP': { name: 'Peso Filipino' },
             'VND': { name: 'Dong Vietnamita' },
-            // Moedas da Oceania
-            'AUD': { name: 'Dólar Australiano' },
-            'NZD': { name: 'Dólar Neozelandês' },
-            // Moedas da África
-            'EGP': { name: 'Libra Egípcia' },
-            'NGN': { name: 'Naira Nigeriana' },
-            'ZAR': { name: 'Rand Sul-Africano' },
-            // Criptomoedas
-            'BTC': { name: 'Bitcoin' },
-            'LTC': { name: 'Litecoin' },
-            'ETH': { name: 'Ethereum' },
-            // Outras moedas importantes
-            'AFN': { name: 'Afghani Afegão' },
-            'ALL': { name: 'Lek Albanês' },
-            'AMD': { name: 'Dram Armênio' },
-            'ANG': { name: 'Florim das Antilhas' },
-            'AOA': { name: 'Kwanza Angolano' },
-            'AWG': { name: 'Florim Arubano' },
-            'AZN': { name: 'Manat Azeri' },
-            'BAM': { name: 'Marco Conversível' },
-            'BBD': { name: 'Dólar de Barbados' },
+            'INR': { name: 'Rupia Indiana' },
+            'PKR': { name: 'Rupia Paquistanesa' },
             'BDT': { name: 'Taka de Bangladesh' },
-            'BHD': { name: 'Dinar do Bahrein' },
-            'BIF': { name: 'Franco Burundiano' },
-            'BMD': { name: 'Dólar das Bermudas' },
-            'BND': { name: 'Dólar de Brunei' },
-            'BOB': { name: 'Boliviano' },
-            'BSD': { name: 'Dólar das Bahamas' },
-            'BWP': { name: 'Pula de Botswana' },
-            'BYN': { name: 'Rublo Bielorrusso' },
-            'BZD': { name: 'Dólar de Belize' },
-            'CDF': { name: 'Franco Congolês' },
-            'CRC': { name: 'Colón Costarriquenho' },
-            'CUP': { name: 'Peso Cubano' },
-            'CVE': { name: 'Escudo Cabo-Verdiano' },
-            'DJF': { name: 'Franco do Djibuti' },
-            'DOP': { name: 'Peso Dominicano' },
-            'DZD': { name: 'Dinar Argelino' },
-            'ERN': { name: 'Nakfa da Eritreia' },
-            'ETB': { name: 'Birr Etíope' },
-            'FJD': { name: 'Dólar de Fiji' },
-            'FKP': { name: 'Libra das Falklands' },
-            'GEL': { name: 'Lari Georgiano' },
-            'GHS': { name: 'Cedi Ganês' },
-            'GIP': { name: 'Libra de Gibraltar' },
-            'GMD': { name: 'Dalasi da Gâmbia' },
-            'GNF': { name: 'Franco Guineano' },
-            'GTQ': { name: 'Quetzal Guatemalteco' },
-            'GYD': { name: 'Dólar da Guiana' },
-            'HNL': { name: 'Lempira Hondurenha' },
-            'HRK': { name: 'Kuna Croata' },
-            'HTG': { name: 'Gourde Haitiano' },
-            'IQD': { name: 'Dinar Iraquiano' },
-            'IRR': { name: 'Rial Iraniano' },
-            'JMD': { name: 'Dólar Jamaicano' },
-            'JOD': { name: 'Dinar Jordaniano' },
-            'KES': { name: 'Xelim Queniano' },
-            'KGS': { name: 'Som Quirguiz' },
-            'KHR': { name: 'Riel Cambojano' },
-            'KMF': { name: 'Franco Comoriano' },
-            'KWD': { name: 'Dinar Kuwaitiano' },
-            'KYD': { name: 'Dólar das Ilhas Cayman' },
-            'KZT': { name: 'Tenge Cazaque' },
-            'LAK': { name: 'Kip Laosiano' },
-            'LBP': { name: 'Libra Libanesa' },
             'LKR': { name: 'Rupia do Sri Lanka' },
-            'LRD': { name: 'Dólar Liberiano' },
-            'LSL': { name: 'Loti do Lesoto' },
-            'LYD': { name: 'Dinar Líbio' },
-            'MAD': { name: 'Dirham Marroquino' },
-            'MDL': { name: 'Leu Moldavo' },
-            'MGA': { name: 'Ariary Malgaxe' },
-            'MKD': { name: 'Dinar Macedônio' },
+            'NPR': { name: 'Rupia Nepalesa' },
+            'KHR': { name: 'Riel Cambojano' },
+            'LAK': { name: 'Kip Laosiano' },
             'MMK': { name: 'Kyat de Myanmar' },
             'MNT': { name: 'Tugrik Mongol' },
-            'MOP': { name: 'Pataca de Macau' },
-            'MRU': { name: 'Ouguiya Mauritana' },
-            'MUR': { name: 'Rupia Mauriciana' },
-            'MVR': { name: 'Rufiyaa Maldiva' },
-            'MWK': { name: 'Kwacha Malauiano' },
-            'MZN': { name: 'Metical Moçambicano' },
-            'NAD': { name: 'Dólar Namibiano' },
-            'NIO': { name: 'Córdoba Nicaraguense' },
-            'NPR': { name: 'Rupia Nepalesa' },
-            'OMR': { name: 'Rial Omanense' },
-            'PAB': { name: 'Balboa Panamenha' },
-            'PGK': { name: 'Kina Papua-Nova Guiné' },
-            'PKR': { name: 'Rupia Paquistanesa' },
-            'PYG': { name: 'Guarani Paraguaio' },
-            'QAR': { name: 'Riyal do Catar' },
-            'RSD': { name: 'Dinar Sérvio' },
-            'RWF': { name: 'Franco Ruandês' },
-            'SBD': { name: 'Dólar das Ilhas Salomão' },
-            'SCR': { name: 'Rupia das Seychelles' },
-            'SDG': { name: 'Libra Sudanesa' },
-            'SOS': { name: 'Xelim Somali' },
-            'SRD': { name: 'Dólar Surinamês' },
-            'SSP': { name: 'Libra Sul-Sudanesa' },
-            'STN': { name: 'Dobra São-Tomense' },
-            'SYP': { name: 'Libra Síria' },
-            'SZL': { name: 'Lilangeni Suazi' },
+            'KZT': { name: 'Tenge Cazaque' },
+            'UZS': { name: 'Som Uzbeque' },
+            'KGS': { name: 'Som Quirguiz' },
             'TJS': { name: 'Somoni Tajique' },
             'TMT': { name: 'Manat Turcomeno' },
-            'TND': { name: 'Dinar Tunisiano' },
-            'TOP': { name: 'Paʻanga Tonganesa' },
-            'TTD': { name: 'Dólar de Trinidad e Tobago' },
+            'ILS': { name: 'Novo Shekel Israelense' },
+            'JOD': { name: 'Dinar Jordaniano' },
+            'KWD': { name: 'Dinar Kuwaitiano' },
+            'BHD': { name: 'Dinar do Bahrein' },
+            'OMR': { name: 'Rial Omanense' },
+            'QAR': { name: 'Riyal do Catar' },
+            'SAR': { name: 'Riyal Saudita' },
+            'AED': { name: 'Dirham dos Emirados' },
+            'IQD': { name: 'Dinar Iraquiano' },
+            'MOP': { name: 'Pataca de Macau' },
+            'BND': { name: 'Dólar de Brunei' },
+            // Moedas da África
+            'ZAR': { name: 'Rand Sul-Africano' },
+            'EGP': { name: 'Libra Egípcia' },
+            'NGN': { name: 'Naira Nigeriana' },
+            'KES': { name: 'Xelim Queniano' },
+            'GHS': { name: 'Cedi Ganês' },
             'TZS': { name: 'Xelim Tanzaniano' },
             'UGX': { name: 'Xelim Ugandense' },
-            'UZS': { name: 'Som Uzbeque' },
-            'VUV': { name: 'Vatu de Vanuatu' },
-            'WST': { name: 'Tala Samoana' },
-            'XAF': { name: 'Franco CFA (África Central)' },
-            'XCD': { name: 'Dólar do Caribe Oriental' },
-            'XOF': { name: 'Franco CFA (África Ocidental)' },
-            'XPF': { name: 'Franco CFP' },
-            'YER': { name: 'Rial Iemenita' },
+            'MAD': { name: 'Dirham Marroquino' },
+            'TND': { name: 'Dinar Tunisiano' },
+            'DZD': { name: 'Dinar Argelino' },
+            'AOA': { name: 'Kwanza Angolano' },
+            'MZN': { name: 'Metical Moçambicano' },
             'ZMW': { name: 'Kwacha Zambiano' },
-            'ZWL': { name: 'Dólar do Zimbábue' }
+            'MWK': { name: 'Kwacha Malauiano' },
+            'BWP': { name: 'Pula de Botswana' },
+            'NAD': { name: 'Dólar Namibiano' },
+            'SZL': { name: 'Lilangeni Suazi' },
+            'LSL': { name: 'Loti do Lesoto' },
+            'MUR': { name: 'Rupia Mauriciana' },
+            'ETB': { name: 'Birr Etíope' },
+            'MGA': { name: 'Ariary Malgaxe' },
+            'CVE': { name: 'Escudo Cabo-Verdiano' },
+            'GMD': { name: 'Dalasi da Gâmbia' },
+            'LRD': { name: 'Dólar Liberiano' },
+            'SLL': { name: 'Leone Serra-Leonês' },
+            // Outras moedas
+            'XAF': { name: 'Franco CFA (África Central)' },
+            'XOF': { name: 'Franco CFA (África Ocidental)' },
+            'XCD': { name: 'Dólar do Caribe Oriental' },
+            'XPF': { name: 'Franco CFP' }
         };
 
         // Funções auxiliares para AwesomeAPI
@@ -1307,7 +1269,7 @@
                 // Recria o gráfico quando o tema mudar
                 const handleThemeChange = () => {
                     if (results && results.dataPoints) {
-                        setTimeout(() => createChart(results.dataPoints), 100);
+                        setTimeout(() => createChart(results.dataPoints, results.fromCurrency, results.toCurrency), 100);
                     }
                 };
 
@@ -1516,7 +1478,7 @@
 					
 					if (isFresh) {
 						setResults(parsed.data);
-						setTimeout(() => createChart(parsed.data.dataPoints), 100);
+						setTimeout(() => createChart(parsed.data.dataPoints, parsed.data.fromCurrency, parsed.data.toCurrency), 100);
 						return; // Retorna sem chamar a API
 					}
 				}
@@ -1559,9 +1521,21 @@
 						});
 					}
 				}
-				// Caso 4: BRL para BRL (taxa = 1)
+				// Caso 4: BRL para BRL (taxa = 1.0)
 				else if (fromCurrency === 'BRL' && toCurrency === 'BRL') {
-					throw new Error('Conversão de BRL para BRL não é necessária. As moedas são iguais.');
+					// Gera taxas de 1.0 para todos os dias do período
+					const start = new Date(startDate);
+					const end = new Date(endDate);
+					rates = {};
+					
+					for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+						// Pula fins de semana
+						const dayOfWeek = d.getDay();
+						if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+							const isoDate = d.toISOString().split('T')[0];
+							rates[isoDate] = 1.0;
+						}
+					}
 				}
 			
 				if (!rates || Object.keys(rates).length === 0) {
@@ -1584,7 +1558,9 @@
 			
 				const finalResults = {
 					average, min, max, standardDeviation, dataPoints,
-					totalDays: rateValues.length
+					totalDays: rateValues.length,
+					fromCurrency: fromCurrency,
+					toCurrency: toCurrency
 				};
 			
 				// Salva no cache antes de atualizar o estado
@@ -1594,7 +1570,7 @@
 				}));
 			
 				setResults(finalResults);
-				setTimeout(() => createChart(dataPoints), 100);
+				setTimeout(() => createChart(dataPoints, fromCurrency, toCurrency), 100);
 			
 						} catch (err) {
 					setError(err.message || 'Erro ao calcular média.');
@@ -1604,7 +1580,7 @@
 			};
             
 
-            const createChart = (dataPoints) => {
+            const createChart = (dataPoints, fromCurr, toCurr) => {
                 if (!chartRef.current) return;
 
                 if (chartInstance.current) {
@@ -1624,7 +1600,7 @@
                     data: {
                         labels: dataPoints.map(p => formatDate(p.date)),
                         datasets: [{
-                            label: `${fromCurrency} → ${toCurrency}`,
+                            label: `${fromCurr} → ${toCurr}`,
                             data: dataPoints.map(p => p.rate),
                             borderColor: '#5c7cfa',
                             backgroundColor: 'rgba(92, 124, 250, 0.1)',
@@ -1721,22 +1697,22 @@
 
                 const basicData = results.dataPoints.map(point => ({
                     'Data': point.date,
-                    [`Taxa (${fromCurrency}/${toCurrency})`]: parseFloat(point.rate.toFixed(4)),
+                    [`Taxa (${results.fromCurrency}/${results.toCurrency})`]: parseFloat(point.rate.toFixed(4)),
                 }));
 
                 const summaryData = [
-                    { 'Data': '', [`Taxa (${fromCurrency}/${toCurrency})`]: '' },
-                    { 'Data': 'RESUMO ESTATÍSTICO', [`Taxa (${fromCurrency}/${toCurrency})`]: '' },
-                    { 'Data': 'Média', [`Taxa (${fromCurrency}/${toCurrency})`]: parseFloat(results.average.toFixed(4)) },
-                    { 'Data': 'Mínima', [`Taxa (${fromCurrency}/${toCurrency})`]: parseFloat(results.min.toFixed(4)) },
-                    { 'Data': 'Máxima', [`Taxa (${fromCurrency}/${toCurrency})`]: parseFloat(results.max.toFixed(4)) },
-                    { 'Data': 'Desvio Padrão', [`Taxa (${fromCurrency}/${toCurrency})`]: parseFloat(results.standardDeviation.toFixed(4)) },
-                    { 'Data': 'Variação (%)', [`Taxa (${fromCurrency}/${toCurrency})`]: parseFloat(((results.max - results.min) / results.min * 100).toFixed(2)) },
-                    { 'Data': 'Total de Dias Úteis', [`Taxa (${fromCurrency}/${toCurrency})`]: results.totalDays }
+                    { 'Data': '', [`Taxa (${results.fromCurrency}/${results.toCurrency})`]: '' },
+                    { 'Data': 'RESUMO ESTATÍSTICO', [`Taxa (${results.fromCurrency}/${results.toCurrency})`]: '' },
+                    { 'Data': 'Média', [`Taxa (${results.fromCurrency}/${results.toCurrency})`]: parseFloat(results.average.toFixed(4)) },
+                    { 'Data': 'Mínima', [`Taxa (${results.fromCurrency}/${results.toCurrency})`]: parseFloat(results.min.toFixed(4)) },
+                    { 'Data': 'Máxima', [`Taxa (${results.fromCurrency}/${results.toCurrency})`]: parseFloat(results.max.toFixed(4)) },
+                    { 'Data': 'Desvio Padrão', [`Taxa (${results.fromCurrency}/${results.toCurrency})`]: parseFloat(results.standardDeviation.toFixed(4)) },
+                    { 'Data': 'Variação (%)', [`Taxa (${results.fromCurrency}/${results.toCurrency})`]: parseFloat(((results.max - results.min) / results.min * 100).toFixed(2)) },
+                    { 'Data': 'Total de Dias Úteis', [`Taxa (${results.fromCurrency}/${results.toCurrency})`]: results.totalDays }
                 ];
 
                 const excelData = [...basicData, ...summaryData];
-                let fileName = `Cambio_${fromCurrency}_${toCurrency}_${startDate}_${endDate}`;
+                let fileName = `Cambio_${results.fromCurrency}_${results.toCurrency}_${startDate}_${endDate}`;
 
                 if (dataFormat === 'xlsx') {
                     const ws = XLSX.utils.json_to_sheet(excelData);
@@ -1755,8 +1731,8 @@
                 } else if (dataFormat === 'json') {
                     const jsonData = {
                         metadata: {
-                            from: fromCurrency,
-                            to: toCurrency,
+                            from: results.fromCurrency,
+                            to: results.toCurrency,
                             startDate: startDate,
                             endDate: endDate,
                             totalDays: results.totalDays
@@ -1779,7 +1755,7 @@
                     link.download = fileName + '.json';
                     link.click();
                 } else if (dataFormat === 'txt') {
-                    let txtContent = `TAXAS DE CÂMBIO - ${fromCurrency} para ${toCurrency}\n`;
+                    let txtContent = `TAXAS DE CÂMBIO - ${results.fromCurrency} para ${results.toCurrency}\n`;
                     txtContent += `Período: ${startDate} até ${endDate}\n`;
                     txtContent += `Total de dias úteis: ${results.totalDays}\n\n`;
                     txtContent += `Data\t\tTaxa\n`;
@@ -1811,7 +1787,7 @@
                 }
 
                 const canvas = chartRef.current;
-                const fileName = `Grafico_Cambio_${fromCurrency}_${toCurrency}_${startDate}_${endDate}`;
+                const fileName = `Grafico_Cambio_${results.fromCurrency}_${results.toCurrency}_${startDate}_${endDate}`;
 
                 if (imageFormat === 'svg') {
                     alert('Formato SVG: Para melhor qualidade, use PNG ou JPG. SVG requer conversão especial do Canvas.');
@@ -2002,7 +1978,7 @@
                                     <div className="stat-card">
                                         <div className="stat-label">Média</div>
                                         <div className="stat-value">{results.average.toFixed(4)}</div>
-                                        <div className="stat-subtext">1 {fromCurrency} = {results.average.toFixed(4)} {toCurrency}</div>
+                                        <div className="stat-subtext">1 {results.fromCurrency} = {results.average.toFixed(4)} {results.toCurrency}</div>
                                     </div>
                                     <div className="stat-card">
                                         <div className="stat-label">Mínima</div>
